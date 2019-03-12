@@ -1,0 +1,49 @@
+@layout('layouts.main_layout')
+
+@section('content')
+
+<div class="auth">
+		<div class="container">
+			<div class="auth__inner">
+				<div class="auth__media">
+                    {{--  This gif is downloaded from dribble, Designed by alicehodgedesign  --}}
+					<img src="/images/typing.gif" alt="Registeration">
+				</div>
+				<div class="auth__auth">
+					<h1 class="auth__title">Create your account</h1>
+					<p>Please fill up the form to create your account</p>
+					<form method='post' action="/user/register" autocomplete="off" role="presentation" class="form">
+						<label>Full Name</label>
+						<input type="text" name="fullname" value="{{fullname}}" placeholder="Ex: John Smith" required="required">
+						<label>Email</label>
+						<input type="text" name="email" value="{{email}}" placeholder="Ex: you@mail.com" required="required">
+						<label>Create Password</label>
+						<input type="password" name="password" placeholder="Min 6-digit & Alpha-numerical" required="required">
+						<label>Re-enter Password</label>
+						<input type="password" name="repassword" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" required="required">
+						<button type='submit' class="button button__accent">Log in</button>
+						<a href="/user/forgotpassword"><h6 class="left-align" >Forgot your password?</h6></a>
+					</form>
+				</div>
+				@if(errors.length > 0)
+					@each(error in errors)
+					<div class="myAlert-top alert alert-warning">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong><i class="fas fa-exclamation-triangle"></i></strong> {{ error }}
+					</div>
+					@endeach
+				@endif
+				@if(valErrors.length > 0)
+					@each(error in valErrors)
+					<div class="myAlert-top alert alert-warning">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong><i class="fas fa-exclamation-triangle"></i></strong> {{ error.msg }}
+					</div>
+					@endeach
+				@endif
+			</div>
+		</div>
+	</div>
+
+@endsection
+

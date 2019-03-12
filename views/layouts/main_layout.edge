@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta class="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}">
+	<meta name="keywords" content="{{keywords}}">
+	<meta name="author" content="Rajnish Kumar | http://iamrajnish.ml">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Tamma|Roboto+Condensed" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	@!section('styles')
+	<style>
+		.nav-item{
+			padding-right: 0.4rem;
+		}
+		.myAlert-top{
+			position: fixed;
+			top: 5rem; 
+			left:2%;
+			width: 96%;
+		}
+	</style>
+    <link rel='stylesheet' href='/css/style.css' />
+</head>
+<body>
+	<!-- Hero(extended) navbar -->
+	<nav class="navbar navbar-expand-md navbar-dark" style="background-color:#6C63FF;">
+	<a class="navbar-brand" href="/">Navbar</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav ml-auto">
+		<li class="nav-item">
+			<a class="nav-link btn btn-outline-light text-light" href="/user/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link btn btn-outline-light text-light" href="/user/register"><i class="fas fa-user-plus"></i> Signup</a>
+		</li>
+		</ul>
+	</div>  
+	</nav>
+    @!section('content')
+	<div class="footer footer--dark">
+		<div class="container">
+			<div class="footer__inner">
+				<a href="/" class="footer__textLogo">This Brand</a>
+				<div class="footer__data">
+					<div class="footer__data__item">
+						<div class="footer__row">
+							Created by <a href="#" target="_blank" class="footer__link">Katerina Limpitsouni</a>
+						</div>
+						<div class="footer__row">
+						Code/design by <a href="#" target="_blank" class="footer__link">Aggelos Gesoulis</a>
+						</div>
+					</div>
+					<div class="footer__data__item">
+						<div class="footer__row">Created for <a href="#" target="_blank" class="footer__link">unDraw</a>
+						</div>
+						<div class="footer__row">Special thx to <a href="#" target="_blank" class="footer__link">ShareBoost</a> for the support
+						</div>
+					</div>
+					<div class="footer__data__item">
+					<div class="footer__row">
+						<a href="#" target="_blank" class="footer__link">GitHub</a>
+					</div>
+					<div class="footer__row">
+						<a href="#" target="_blank" class="footer__link">Twitter</a>
+					</div>
+					<div class="footer__row">
+						<a href="#" target="_blank" class="footer__link">Facebook</a>
+					</div>
+					<div class="footer__row">
+						<a target="_blank" href="/exam/" class="footer__link"><i class="fas fa-diagnoses"></i> Authorised Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+	<script src='/js/app.min.js'></script>
+	@!section('scripts')
+</body>
+</html>

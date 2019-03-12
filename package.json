@@ -1,0 +1,32 @@
+{
+  "name": "exam-portal",
+  "version": "1.0.0",
+  "description": "An examination portal for indian languages",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "exam",
+    "hindi",
+    "certification",
+    "indian",
+    "language",
+    "certifications"
+  ],
+  "author": "Rajnish Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "cloudinary": "^1.13.2",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.3",
+    "dotenv": "^6.2.0",
+    "edge.js": "^1.1.4",
+    "express": "^4.16.4",
+    "express-edge": "^1.0.0",
+    "express-fileupload": "^1.1.1-alpha.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.4.15"
+  }
+}
