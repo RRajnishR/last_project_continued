@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <br>
+
+    <div class="container">
+        <h2>Exam Creator Account Access Page</h2>
+        <br>
+        <!-- Nav pills -->
+        <ul class="nav nav-pills" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="pill" href="#home">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#menu1">Register</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="home" class="container tab-pane active"><br>
+                <h3>Login</h3>
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email address:</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div id="menu1" class="container tab-pane fade"><br>
+                <h3>Register</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="fname">Full Name:</label>
+                        <input name="fullname" type="text" class="form-control" id="fname" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address:</label>
+                        <input name="email" type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input name="password" type="password" class="form-control" id="pwd" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="repwd">Re-enter Password:</label>
+                        <input name="repassword" type="password" class="form-control" id="repwd" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lang">Select Language you expertise in:</label>
+                        <select name="expert_in_lang" id="expert_in_lang" class="form-control">
+                            @each(lang in all_languages)
+                              <option value="{{lang.lang_code}}">{{lang.lang_name}}</option>
+                            @endeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        //Code to persist the tabs when refreshed
+        $(document).ready(function() {
+            if (location.hash) {
+                $("a[href='" + location.hash + "']").tab("show");
+            }
+            $(document.body).on("click", "a[data-toggle]", function(event) {
+                location.hash = this.getAttribute("href");
+            });
+        });
+        $(window).on("popstate", function() {
+            var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+            $("a[href='" + anchor + "']").tab("show");
+        });
+    </script>
+</body>
+
+</html>

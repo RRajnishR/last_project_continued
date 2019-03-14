@@ -14,16 +14,30 @@ function generateSecretKey() {
 
 const examinerSchema = new mongoose.Schema({
     fullname : {
-
+        type : String,
+        required : [true, 'What should we call you?']
     }, 
     email : {
-
+        type : String,
+        required : [true, 'We need to recognise you uniquely, so please fill up your email']
     }, 
     password : {
-
+        type : String,
+        required : [true, 'Without Password, How will be able to login?']
     }, 
     expert_in_lang : {
-
+        type : String
+    },
+    secret_token : {
+        type : String
+    },
+    profile_status : {
+        type : Boolean,
+        default : true
+    },
+    register_date : {
+        type : Date,
+        default : Date.now()
     }
 }, {versionKey: false});
 
@@ -37,6 +51,6 @@ examinerSchema.pre('save', function(next) {
     });
 });
 
-const User = mongoose.model('Users', userSchema);
+const examCreator = mongoose.model('examcreator', examinerSchema);
 
-module.exports = User;
+module.exports = examCreator;
