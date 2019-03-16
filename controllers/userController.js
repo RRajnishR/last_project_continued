@@ -1,10 +1,8 @@
 const express = require('express');
 var router = express.Router();
-// const bcrypt = require('bcrypt');
 const User = require('../models/users.model'); 
 
 router.get('/login', (req, res) => {
-    //console.log(req.session);
     res.render("userviews/loginUser",{
         success: req.flash('successMessage'),
         title: "Users Login Page",
@@ -14,7 +12,6 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    //console.log(req.session);
     res.render("userviews/registerUser",{
         title: "User Registeration Page",
         description : "This page will help you in creating your account",
@@ -23,7 +20,7 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-    //using a little bit of destructuring here
+    //destructuring here
     const { fullname, email, password, repassword,  } = req.body;
     let valErrors = [];
 

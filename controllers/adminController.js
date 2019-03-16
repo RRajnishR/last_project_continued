@@ -2,14 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 var router = express.Router();
 const checkAuthentication = require('../middlewares/admin.middleware');
-//require('./models/db');
 
 const Language = require('../models/language.model');
 
 router.get('/', (req, res) => {
     res.redirect('/admin/login');
 });
-
+/*
+    Request type : GET, will bring forth the login Page
+*/
 router.get('/login', checkAuthentication, (req, res) => {
     res.render("adminviews/login",{
         title: "Administrator's Login Page",
@@ -17,7 +18,10 @@ router.get('/login', checkAuthentication, (req, res) => {
         keywords: "login, language, dashboard, control"
     });
 });
-
+/*
+    Request Type : POST, will check username and password
+    if it matches login. Credentials are stored in dotenv file
+*/
 router.post('/login', (req, res) => {
     //console.log(req.body);
     const { login_id, password } = req.body;
@@ -43,7 +47,10 @@ router.post('/login', (req, res) => {
                 });
     }
 });
-
+/*
+    This route will open up the dashboard. have to add a middleware to check if the session of admin 
+    exists or not
+*/
 router.get('/dashboard', (req, res) => {
     res.render("adminviews/dashboard", {
         title: "Administrator's DashBoard",
@@ -51,7 +58,9 @@ router.get('/dashboard', (req, res) => {
         keywords: "Control, online test portal, India Languages"
     });
 });
-
+/*
+  This route will take you to the Examiners page, from here admin can see all the examiners and control them.  
+*/
 router.get('/examiners', (req, res) => {
     res.render("adminviews/examinerlist", {
         title: "All Languages",
@@ -59,7 +68,10 @@ router.get('/examiners', (req, res) => {
         keywords: "Control, online test portal, India Languages"
     });
 });
-
+/*
+  This route will take you to the Language page, from here admin can see all the languages and 
+  CRUD Them.  
+*/
 router.get('/languages', async (req, res) => {
 
     const all_languages = await Language.find({});
@@ -73,7 +85,9 @@ router.get('/languages', async (req, res) => {
         success : req.flash('success')
     });
 });
-
+/*
+  This route is to save the language, which is sent from Languge page.  
+*/
 router.post('/languages', (req, res) => {
     Language.create(req.body, (error, lang) =>{
         if(error){
@@ -84,7 +98,9 @@ router.post('/languages', (req, res) => {
         res.redirect('languages');
     });
 });
-
+/*
+  This route will help in deleting the language which is not needed or created in wrong manner  
+*/
 router.get('/langdelete/:id', (req, res) => {
     let language_id = req.params.id;
     Language.findByIdAndDelete(language_id, (err, lang) => {
