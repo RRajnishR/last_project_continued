@@ -18,13 +18,20 @@ router.post('/login', (req, res) => {
     const { email, password } = req.body;
     console.log(req.body);
     // login examiner to the dashboard
-    examiner.find({email : email}).then(email => {
-        if(email){
-            
-        } else {
-            
+    examiner.findOne({ email }, (error, user) => {
+        if (user) {
+          // compare passwords.
+          bcrypt.compare(password, user.password, (error, same) => {
+            if (same) {
+              res.redirect('/')
+            } else {
+              res.redirect('/auth/login')
+            }
+          })
+        } else { 
+          return res.redirect('/auth/login')
         }
-    })
+      })
 });
 
 router.post('/register', (req, res) => {
