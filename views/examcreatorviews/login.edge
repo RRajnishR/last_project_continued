@@ -6,9 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -16,7 +13,7 @@
 
     <div class="container">
         <h2>Exam Creator Account Access Page</h2>
-        <br>
+        <br>    
         <!-- Nav pills -->
         <ul class="nav nav-pills" role="tablist">
             <li class="nav-item">
@@ -26,7 +23,37 @@
                 <a class="nav-link" data-toggle="pill" href="#menu1">Register</a>
             </li>
         </ul>
-
+        @if(valErrors.length > 0)
+            <br>
+            @each(error in valErrors)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:block;">
+                    <strong>Error</strong> {{error.msg}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endeach
+        @endif
+        @if(regError.length > 0)
+            <br>
+            @each(error in regError)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:block;">
+                    <strong>Error</strong> {{error.error}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endeach
+        @endif
+        @if(successMessage !='')
+            <br>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:block;">
+                <strong>Success</strong> {{successMessage}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <!-- Tab panes -->
         <div class="tab-content">
             <div id="home" class="container tab-pane active"><br>
@@ -48,23 +75,23 @@
                 <form action="/exam/register" method="POST">
                     <div class="form-group">
                         <label for="fname">Full Name:</label>
-                        <input name="fullname" type="text" class="form-control" id="fname" required="required">
+                        <input name="fullname" type="text" class="form-control" placeholder="eg: Your Awesome Name" value="{{fullname || ''}}" id="fname" required="required">
                     </div>
                     <div class="form-group">
                         <label for="email">Email address:</label>
-                        <input name="email" type="email" class="form-control" id="email" required>
+                        <input name="email" placeholder="eg: abc@someemail.com" type="email" class="form-control" value="{{email || ''}}" id="email" required>
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password:</label>
-                        <input name="password" type="password" class="form-control" id="pwd" required>
+                        <input name="password" type="password" placeholder="eg: Alphanumeric, Min. 6 digit" class="form-control" id="pwd" required>
                     </div>
                     <div class="form-group">
                         <label for="repwd">Re-enter Password:</label>
-                        <input name="repassword" type="password" class="form-control" id="repwd" required>
+                        <input name="repassword" type="password" placeholder="eg: Repeat your password" class="form-control" id="repwd" required>
                     </div>
                     <div class="form-group">
                         <label for="lang">Select Language you expertise in:</label>
-                        <select name="expert_in_lang" id="expert_in_lang" class="form-control">
+                        <select name="expert_in_lang" id="expert_in_lang" class="form-control" required>
                             @each(lang in all_languages)
                               <option value="{{lang.lang_code}}">{{lang.lang_name}}</option>
                             @endeach
@@ -75,6 +102,10 @@
             </div>
         </div>
     </div>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         //Code to persist the tabs when refreshed
         $(document).ready(function() {
