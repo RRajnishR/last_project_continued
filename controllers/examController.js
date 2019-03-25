@@ -1,9 +1,16 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 var router = express.Router();
 const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
-router.get('/', async (req, res) => {
+const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
+const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
+
+/*
+
+*/
+router.get('/', checkAuthentication, async (req, res) => {
     const all_languages = await languages.find({});
     res.render("examcreatorviews/login", {
         all_languages,
@@ -14,10 +21,14 @@ router.get('/', async (req, res) => {
         fullname : req.flash('fullname'),
         email : req.flash('email'),
         regError : req.flash('registrationErrors'),
-        successMessage : req.flash('successMessage')
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage')
     });
 });
 
+/*
+
+*/
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     // login examiner to the dashboard
@@ -26,17 +37,23 @@ router.post('/login', (req, res) => {
           // compare passwords.
           bcrypt.compare(password, user.password, (error, same) => {
             if (same) {
-              res.redirect('/')
+              req.session.examinerid = user._id;
+              res.redirect('/exam/dashboard')
             } else {
-              res.redirect('/auth/login')
+              req.flash('errorMessage', "Incorrect Password!");
+              res.redirect('/exam');
             }
           })
         } else { 
-          return res.redirect('/auth/login')
+            req.flash('errorMessage', "User Not Found");
+            res.redirect('/exam')
         }
       })
 });
 
+/*
+
+*/
 router.post('/register', (req, res) => {
     //receive all data here---check if email exists---else save and send email
     const { fullname, email, password, repassword, expert_in_lang } = req.body;
@@ -96,5 +113,21 @@ router.post('/register', (req, res) => {
       });
     }
 });
+
+/*
+
+*/
+router.get('/dashboard', authoriseExaminer, (req, res) => {
+    res.render("examcreatorviews/dashboard", {
+        title : "Exam Creators DashBoard",
+        keywords: "exam, create, Questions",
+        description : "Protected Dashboard for Exam Creators"
+    });
+});
+
+/*
+
+*/
+
 
 module.exports = router;
