@@ -38,6 +38,7 @@ router.post('/login', (req, res) => {
           bcrypt.compare(password, user.password, (error, same) => {
             if (same) {
               req.session.examinerid = user._id;
+              req.session.expert_in_lang = user.expert_in_lang;
               res.redirect('/exam/dashboard')
             } else {
               req.flash('errorMessage', "Incorrect Password!");
@@ -128,6 +129,30 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 /*
 
 */
+router.get('/readingSection', (req, res) => {
+    res.render();
+});
+
+/*
+
+*/
+router.get('/listeningSection', (req, res) => {
+    res.render();
+});
+
+/*
+
+*/
+router.get('/writingSection', (req, res) => {
+    res.render();
+});
+
+/*
+
+*/
+router.get('/speakingSection', (req, res) => {
+    res.render();
+});
 
 
 module.exports = router;
