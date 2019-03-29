@@ -130,28 +130,44 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 
 */
 router.get('/readingSection', (req, res) => {
-    res.render();
+    res.render("examcreator/readview", {
+        title : "Reading Section",
+        keywords: "exam, create, Questions",
+        description : "Creating Reading section Questions here"
+    });
 });
 
 /*
 
 */
 router.get('/listeningSection', (req, res) => {
-    res.render();
+    res.render("examcreator/listenview", {
+        title : "Listening Section",
+        keywords: "exam, create, Questions",
+        description : "Creating Listening section Questions here"
+    });
 });
 
 /*
 
 */
 router.get('/writingSection', (req, res) => {
-    res.render();
+    res.render("examcreator/writingview", {
+        title : "writing Section",
+        keywords: "exam, create, Questions",
+        description : "Creating writing section Questions here"
+    });
 });
 
 /*
 
 */
 router.get('/speakingSection', (req, res) => {
-    res.render();
+    res.render("examcreator/speakview", {
+        title : "Speaking Section",
+        keywords: "exam, create, Questions",
+        description : "Creating Speaking section Questions here"
+    });
 });
 
 
