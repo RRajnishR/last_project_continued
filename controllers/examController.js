@@ -130,7 +130,7 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 
 */
 router.get('/readingSection', (req, res) => {
-    res.render("examcreator/readview", {
+    res.render("examcreatorviews/readview", {
         title : "Reading Section",
         keywords: "exam, create, Questions",
         description : "Creating Reading section Questions here"
