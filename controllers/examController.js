@@ -4,6 +4,8 @@ var router = express.Router();
 const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
+const readingSectionDB = require('../models/readingSection.model');
+// const readingQuestions = require('../');
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 
