@@ -1,5 +1,28 @@
 const mongoose = require('mongoose');
 
+const readingSectionQuestions = new mongoose.Schema({
+    Question : {
+        type : String,
+        required : true
+    },
+    lang_level : {
+        type : String,
+        enum : ['A1', 'A2', 'B1', 'B2'],
+        default : 'A1'
+    },  
+    qtype : {
+        type : String,
+        enum : ['optional', 'singleliner', 'multipleliner']
+    },
+    options : [{
+        type : String
+    }],
+    correct_index : {
+        type : Number
+    }
+});
+
+
 const readingSection = new mongoose.Schema({
     paragraph: {
         type : String,
@@ -18,15 +41,7 @@ const readingSection = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
-    lang_level : {
-        type : String,
-        enum : ['A1', 'A2', 'B1', 'B2'],
-        default : 'A1'
-    },
-    questions : [{
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'readingSectionQuestions'
-    }]
+    questions : [readingSectionQuestions]
 });
 
 const rSection = mongoose.model('readingSectionParagraphs', readingSection);

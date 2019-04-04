@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
 const readingSectionDB = require('../models/readingSection.model');
-// const readingQuestions = require('../');
+//const readingQuestions = require('../models/readingQuestions.model');
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 
@@ -131,14 +131,28 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 /*
 
 */
-router.get('/readingSection', (req, res) => {
+router.get('/readingSection', authoriseExaminer, async(req, res) => {
+    const reading_paragraphs = await readingSectionDB.find({});
     res.render("examcreatorviews/readview", {
         title : "Reading Section",
         keywords: "exam, create, Questions",
-        description : "Creating Reading section Questions here"
+        description : "Creating Reading section Questions here",
+        reading_paragraphs
     });
 });
 
+router.get('/readingSection/addPara', authoriseExaminer, (req, res) => {
+    res.render("examcreatorviews/addReadPara", {
+        title : "Add Reading Section",
+        keywords: "exam, create, Question",
+        description : "Creating Reading section Questions here",
+        expert_in_lang : req.session.expert_in_lang
+    });
+});
+
+router.post('/readingSection/addPara', (req, res) => {
+    console.log(req.body);
+});
 /*
 
 */

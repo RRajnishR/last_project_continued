@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>PramukhIME CKEditor Plugin Changelog</title>
+		<meta name="Description" content="Changelog for PramukhIME CKEditor Plugin" />
+		<meta name="keywords" content="changelog, pramukhime" />
+		<meta name="copyright" content="Copyright © 2005-2018 Vishal Monpara" />
+		<link rel="shortcut icon" href="img/pramukhime.ico" type="image/x-icon"/>
+		<link type="text/css" href="css/bootstrap.min.css" rel="Stylesheet" />
+		<link type="text/css" href="css/default.css" rel="Stylesheet" />
+	</head>
+	<body class="container">
+		<div class="row pageheader">
+			<img src="img/pramukhime48.png" alt="logo"/>
+			<h1 class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">PramukhIME CKEditor Plugin Changelog</h1>
+		</div>
+		<h2>Version 4.0.4 (November 2018)</h2>
+		<ul>
+			<li>Removed Devanagari OM from Kannada, Malayalam and Telugu.</li>
+			<li>Added Udatta, Anudatta and double Svarita in Sanskrit.</li>
+		</ul>
+		<h2>Version 4.0.3 (February 2018)</h2>
+		<ul>
+			<li>Fixed Kannada OM bug</li>
+		</ul>
+		<h2>Version 4.0.2 (December 2017)</h2>
+		<ul>
+			<li>Fixed a bug where dynamically adding PramukhIME caused issue</li>
+		</ul>
+		<h2>Version 4.0.1 (November 2017)</h2>
+		<ul>
+			<li>Fixed a bug where setting the data to editor stopped the PramukhIME from working</li>
+		</ul>
+		<h2>Version 4.0.0 (February 2017)</h2>
+		<p>A major overhault to the core library lead to this release with more features and works with CKEditor 4.x</p>
+		<ul>
+			<li>Kashmiri, Meitei (Meetei Mayek), Ol Chiki (Santali), Marathi (Modi script) and Sora languages added</li>
+			<li>Advanced typing rules for each language is implemented
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Language</th>
+							<th>Advanced Rule</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Assamese</td>
+							<td>&quot;n&quot; is transliterated to &quot;NG&quot; depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Bodo</td>
+							<td>&quot;ng&quot; is transliterated to Anusvar depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Bengali</td>
+							<td>&quot;n&quot; and &quot;y&quot; is transliterated to the &quot;NG&quot;, &quot;y&quot;/&quot;z&quot; depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Gujarati, Maithili, Manipuri</td>
+							<td>&quot;n&quot; is transliterated to Anusvar depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Hindi, Kashmiri</td>
+							<td>&quot;n&quot; and &quot;m&quot; depending on the position in the word can be transliterated to Anusvar or Panchamakshar depending on your preferred settings.</td>
+						</tr>
+						<tr>
+							<td>Kannada</td>
+							<td>&quot;n&quot; and &quot;m&quot; depending on the position in the word can be transliterated to Anusvar or Panchamakshar depending on your preferred settings.<br />
+							&quot;m&quot; at the end of the word is transliterated to Anusvar
+							</td>
+						</tr>
+						<tr>
+							<td>Konkani, Marathi and Marathi (Modi)</td>
+							<td>&quot;n&quot; is translitered to Anusvar depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Malayalam</td>
+							<td>&quot;n&quot;, &quot;N&quot;, &quot;r&quot;, &quot;l&quot;, &quot;L&quot; at the end of the word is transliterated to Chillakshar<br />
+							&quot;m&quot; at the end of the word is transliterated to Anusvar</td>
+						</tr>
+						<tr>
+							<td>Meitei</td>
+							<td>&quot;k&quot;, &quot;l&quot;, &quot;m&quot;, &quot;p&quot;, &quot;n&quot;, &quot;t&quot; and &quot;ng&quot; at the end of the word is transliterated to Lonsum</td>
+						</tr>
+						<tr>
+							<td>Nepali</td>
+							<td>&quot;n&quot; and &quot;m&quot; is transliterated to Anusvar or Panchamakshar depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Punjabi</td>
+							<td>&quot;n&quot; if followed by Kanna, Bihari, Lanv, Dulavan, Horha or Kanaorha is transliterated to Bindi<br />
+							&quot;n&quot; if followed by Mukta, Sihari,Aaunkarh or Dulaenkarh is transliterated to Bindi<br />
+							&quot;k&quot;, &quot;g&quot;, &quot;j&quot;, &quot;T&quot;, &quot;D&quot;, &quot;t&quot;, &quot;d&quot;, &quot;p&quot;,
+							&quot;R&quot;, &quot;l&quot; or &quot;s&quot; if typed two times, transliterated to Addak
+							</td>
+						</tr>
+						<tr>
+							<td>Sanskrit</td>
+							<td>&quot;n&quot; is translitered to Panchamakshar depending on the position in the word</td>
+						</tr>
+						<tr>
+							<td>Tamil</td>
+							<td>&quot;n&quot; is transliterated to &quot;n&quot;, &quot;N&quot;, &quot;NN&quot; or &quot;NY&quot; depending on the position in the word<br />
+							&quot;s&quot; is transliterated to &quot;s&quot; or &quot;ch&quot; depending on the position in the word
+							</td>
+						</tr>
+						<tr>
+							<td>Telugu</td>
+							<td>&quot;n&quot; and &quot;m&quot; is transliterated to Anusvar depending on the position in the word.<br />
+							&quot;m&quot; at the end of the word is transliterated to Anusvar</td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li>Key mappings are changed for certain keys for mobile friendly typing</li>
+			<li>Enhanced to work with mobile browsers</li>
+		</ul>
+		<h2>Version 3.0 (June 2012)</h2>
+		<p>A major overhault to the core library lead to this release with more features</p>
+		<h2>Version 2.5.1 (September 2009)</h2>
+		<p>A minor bug fix</p>
+		<h2>Version 2.5 (July 2009)</h2>
+		<p>Even though this is the first release, in order to keep up with the other software packages, it is named as 2.5. This release supported FCK Editor</p>
+		<div class="row pagefooter">
+			<div class="col-xs-12 text-center">
+				Copyright &copy; 2005-2018 <a href="http://www.vishalon.net" target="_blank" title="Vishal Monpara's Website">Vishal Monpara</a> | Version 4.0.4 | 
+		Dedicated to <a href="http://www.pramukhswami.org" title="HH Pramukh Swami Maharaj" target="_blank">HH Pramukh Swami Maharaj</a>
+			</div>
+		</div>
+	</body>
+</html>

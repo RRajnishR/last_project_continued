@@ -18,10 +18,10 @@ const readingSectionQuestions = new mongoose.Schema({
         type : String
     }],
     correct_index : {
-        type : number
+        type : Number
     }
 });
 
-const rSectionQuestions = mongoose.model('readingSectionQuestions', readingSection);
+const rSectionQuestions = mongoose.model('readingSectionQuestions', readingSectionQuestions);
 
-module.exports = rSection;
+module.exports = rSectionQuestions;

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>PramukhIME CKEditor Plugin Example</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<style>
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.title {color:#FF6600; font-size: 1.5em; border-bottom: 2px solid #FF6600;}
+.devversion {color: red; font-size:1em;}
+</style>
+<script src="../ckeditor.js"></script>
+<script type="text/javascript">
+
+var ckeditor4_config = {
+	customConfig:'',
+	toolbarGroups : [
+		// Here name has no effect but groups has
+		{ name: 'pramukhime', groups: [ 'pramukhime' ] },
+		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+		{ name: 'forms', groups: [ 'forms' ] },
+		'/',
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+		{ name: 'links', groups: [ 'links' ] },
+		{ name: 'insert', groups: [ 'insert' ] },
+		'/',
+		{ name: 'styles', groups: [ 'styles' ] },
+		{ name: 'colors', groups: [ 'colors' ] },
+		{ name: 'tools', groups: [ 'tools' ] },
+		{ name: 'others', groups: [ 'others' ] },
+		{ name: 'about', groups: [ 'about' ] }
+	],
+	// Adding pramukhime plugin
+	extraPlugins : 'pramukhime',
+	
+	// Uncomment the following line to remove the needed PramukhIME buttons/dropdowns as per your requirement
+	//removeButtons:'PramukhIME,PramukhIMEHelp,PramukhIMESettings,PramukhIMEResetSettings,PramukhIMEToggleLanguage',
+	
+	// pramukhime customization
+	// Uncomment this section to customize pramukhime plugin
+/*		 
+        pramukhime_options : { // pramukhime_options is Optional. If you don't provide, it will use the default settings
+			// Uncomment the following value to select Sanskrit as the default language
+			selected_value: 'pramukhindic:sanskrit', // Not required. Default value is 'pramukhime:english'
+        },
+*/
+};
+
+</script>
+
+</head>
+<body role="application">
+
+<form method="post" action="">
+	<h1 class="title">PramukhIME CKEditor Plugin Example</h1>
+	<br />
+	<div class="devversion">This is a developer version plugin and should not be used in production environment. Please buy the license to use it in production environment.</div>
+	<br />
+	<div>
+		<textarea id="mytextareaid" name="mytextareaid" rows="20" cols="80" style="width: 80%; height:200px;"></textarea>
+	</div>
+	<div id="message"></div>
+	<br />
+	<div>
+		<h4>How to use?</h4>
+		<ol>
+			<li>Download CKEditor 4.x and unzip on hard drive (CKEditor_ROOT)</li>
+			<li>Unzip PramukhIME CKEditor Plugin into &quot;CKEditor_ROOT\plugins\&quot; 
+				folder.</li>
+			<li>Place this file example.html into &quot;CKEditor_ROOT\samples&quot; folder or change the path of &quot;ckeditor.js&quot; in this file.</li>
+			<li>Open this file using <b>real webserver like IIS/Apache</b> and you should be able to view PramukhIME 
+				drop down list and buttons.</li>
+			<li>Open this file in text editor and change the options given as per comments 
+				within html code to customize PramukhIME plugin.</li>
+		</ol>
+        
+        
+	</div>
+</form>
+
+<script type="text/javascript">
+
+CKEDITOR.replace( 'mytextareaid', ckeditor4_config );
+
+if (document.location.protocol == 'file:') {
+	alert("The examples might not work properly on the local file system due to security settings in your browser. Please use a real webserver.");
+}
+</script>
+</body>
+</html>
