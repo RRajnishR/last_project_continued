@@ -4,12 +4,7 @@ const readingSectionQuestions = new mongoose.Schema({
     Question : {
         type : String,
         required : true
-    },
-    lang_level : {
-        type : String,
-        enum : ['A1', 'A2', 'B1', 'B2'],
-        default : 'A1'
-    },  
+    }, 
     qtype : {
         type : String,
         enum : ['optional', 'singleliner', 'multipleliner']
@@ -41,6 +36,11 @@ const readingSection = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
+    lang_level : {
+        type : String,
+        enum : ['A1', 'A2', 'B1', 'B2'],
+        default : 'A1'
+    }, 
     questions : [readingSectionQuestions]
 });
 

@@ -16,7 +16,25 @@
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin.css" rel="stylesheet">
-
+    <style>
+        table {
+            font-size: 0.9rem;
+        }
+        tr> td{
+            text-align: center;
+        } 
+        
+        a.btn.btn-xs {
+            font-size: 0.7rem;
+        }
+        div.paragraph{
+            max-height:25rem; 
+            background-color:khaki;
+            overflow-x:hidden; 
+            overflow-y:auto; 
+            padding:2rem;
+        }
+    </style>
     @!section('style')
 
 </head>
@@ -109,6 +127,24 @@
         <div id="content-wrapper">
 
             <div class="container-fluid">
+                @if(successMessage !='')
+                <br>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="display:block;">
+                    <strong>Success!</strong> {{successMessage}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
+                @if(errorMessage !='')
+                    <br>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display:block;">
+                        <strong>Error!</strong> {{errorMessage}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 @!section('body')
             </div>
             <!-- /.container-fluid -->
@@ -162,6 +198,18 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip(); 
+
+            $(".delalert").click(function(){
+                if (!confirm("Are you sure, you want to delete this item?")){
+                return false;
+                }
+            });
+        });
+    </script>
 
     @!section('scripts')
 

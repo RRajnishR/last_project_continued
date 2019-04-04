@@ -118,7 +118,7 @@ router.post('/register', (req, res) => {
 });
 
 /*
-
+    Following Route Opens Dashboard
 */
 router.get('/dashboard', authoriseExaminer, (req, res) => {
     res.render("examcreatorviews/dashboard", {
@@ -129,7 +129,9 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 });
 
 /*
-
+    =================Reading Section Start=======================
+    following route will open the page from where exam controller
+    can CRUD Reading Section Paragraphs and Questions.
 */
 router.get('/readingSection', authoriseExaminer, async(req, res) => {
     const reading_paragraphs = await readingSectionDB.find({});
@@ -137,22 +139,82 @@ router.get('/readingSection', authoriseExaminer, async(req, res) => {
         title : "Reading Section",
         keywords: "exam, create, Questions",
         description : "Creating Reading section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
         reading_paragraphs
     });
 });
-
+/*
+    Following will render the view for adding a new paragraph
+*/
 router.get('/readingSection/addPara', authoriseExaminer, (req, res) => {
     res.render("examcreatorviews/addReadPara", {
         title : "Add Reading Section",
         keywords: "exam, create, Question",
         description : "Creating Reading section Questions here",
-        expert_in_lang : req.session.expert_in_lang
+        expert_in_lang : req.session.expert_in_lang,
+    });
+});
+/*
+    following will retrieve the form data from add Paragraph Page and store it into the database
+*/
+router.post('/readingSection/addPara', (req, res) => {
+    //console.log(req.body);
+    const { lang_level, paragraph } = req.body;
+    const readingSection = new readingSectionDB({
+        paragraph : paragraph,
+        language  : req.session.expert_in_lang,
+        exam_creator : req.session.examinerid,
+        lang_level : lang_level
+    });
+    readingSectionDB.create(readingSection, (err, paragraphdata) => {
+        if(err){
+            console.log(err);
+            req.flash('errorMessage', "Some Problem Occured. Try again later!");
+        } else {
+            req.flash('successMessage', "Paragraph Added, Now add Questions related to it by clicking on + button corresponding to your paragraph");
+        }
+        res.redirect('/exam/readingSection');
     });
 });
 
-router.post('/readingSection/addPara', (req, res) => {
-    console.log(req.body);
+/*
+    This will open up a page from where Examiner can insert questions in correspondance to paragraph
+*/
+router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
+    const paragraph = readingSectionDB.findById(req.params.paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Corresponding Paragraph is not Available, Do not alter URL');
+            res.redirect('/exam/readingSection');
+        } else {
+            res.render("examcreatorviews/addReadQuestion", {
+                title : "Add Question to paragraph",
+                keywords: "exam, create, Questions",
+                description : "Creating Reading section Questions here",
+                successMessage : req.flash('successMessage'),
+                errorMessage : req.flash('errorMessage'),
+                expert_in_lang : req.session.expert_in_lang,
+                para
+            });
+        }
+    });
 });
+
+/*
+    Following route will delete the paragraph stored in database using paragraphid
+*/
+router.get('/readingSection/delpara/:paragraphid', (req, res) => {
+    const paragraphid = req.params.paragraphid;
+    readingSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Some error occured while deleting the paragraph, Try again later');
+        } else {
+            req.flash('successMessage', 'Paragraph is deleted successfully');
+        }
+        res.redirect('/exam/readingSection');
+    });
+})
+
 /*
 
 */

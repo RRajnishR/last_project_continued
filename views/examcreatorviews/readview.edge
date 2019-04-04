@@ -18,14 +18,14 @@
       <div class="card mb-3">
         <div class="card-header">
           <i class="fas fa-table"></i>
-          List of Reading Section Paragraphs and Question
+          List of Reading Section Paragraphs and Question <a href="/exam/readingSection/addPara/" class="btn btn-warning btn-xs float-right" data-toggle="tooltip" data-placement="auto" title="Create New Paragraph"><i class="fas fa-file-alt"></i> New Paragraph</a>
         </div>
         <div class="card-body">
-        <a href="/exam/readingSection/addPara/" class="btn btn-success btn-xs">Add New Paragraph</a>
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>Paragraph</th>
                   <th>Upload Date</th>
                   <th>Question Level</th>
@@ -37,16 +37,21 @@
                 @if(reading_paragraphs.length > 0)
                     @each(para in reading_paragraphs)
                     <tr>
-                        <td>para.paragraph</td>
-                        <td>para.</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{$loop.index + 1}}</td>
+                        <td>{{{truncate(para.paragraph, 60, '....')}}}</td>
+                        <td>{{para.upload_date.toDateString()}}</td>
+                        <td>{{para.lang_level}}</td>
+                        <td>{{para.questions.length}}</td>
+                        <td>
+                          <a href="/exam/readingSection/updatepara/{{para._id}}" class="btn btn-xs btn-secondary" data-toggle="tooltip" data-placement="auto" title="Edit/Update Paragraph"><i class="fas fa-edit"></i></a> 
+                          <a href="/exam/readingSection/insertques/{{para._id}}" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="auto" title="Add Questions for this Paragraph"><i class="far fa-plus-square"></i></a> 
+                          <a href="/exam/readingSection/delpara/{{para._id}}" class="btn btn-xs btn-danger delalert" data-toggle="tooltip" data-placement="auto" title="Delete this paragraph"><i class="far fa-trash-alt"></i></a> 
+                        </td>
                     </tr>
                     @endeach
                 @else
                   <tr>
-                      <td colspan="5">No Data Found! List will populate itself, when there are questions.</td>
+                      <td colspan="6" style="text-align:center;">No Data Found! List will populate itself, when there are questions.</td>
                   </tr>
                 @endif
               </tbody>
