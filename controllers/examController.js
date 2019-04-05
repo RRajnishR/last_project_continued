@@ -200,6 +200,10 @@ router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
     });
 });
 
+router.post('/readingSection/insertques', (req, res) => {
+    console.log(req.body);
+});
+
 /*
     Following route will delete the paragraph stored in database using paragraphid
 */
