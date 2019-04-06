@@ -201,7 +201,37 @@ router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
 });
 
 router.post('/readingSection/insertques', (req, res) => {
-    console.log(req.body);
+    const {question, paragraphid, qtype, options, correct_index} = req.body;
+
+    let readingQuestions = ""; 
+    if(qtype == 'optional'){
+        readingQuestions = {
+            question,
+            qtype,
+            options,
+            correct_index
+        }
+    } else {
+        readingQuestions = {
+            question,
+            qtype
+        }
+    }
+    readingSectionDB.findOne({_id : paragraphid}, (err, section) => {
+        if(err){
+            console.log("Error while searching..",err);
+        } else {
+            section.questions.push(readingQuestions);
+            section.save(err => {
+                if(err){
+                    console.log(err);
+                } else {
+                    console.log("Saved");
+                }
+            }); 
+            res.redirect('/exam/readingSection/insertques/'+paragraphid);
+        }
+    })
 });
 
 /*
