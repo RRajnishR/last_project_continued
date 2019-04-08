@@ -184,7 +184,7 @@ router.post('/readingSection/addPara', (req, res) => {
 router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
     const paragraph = readingSectionDB.findById(req.params.paragraphid, (err, para) => {
         if(err){
-            req.flash('errorMessage', 'Corresponding Paragraph is not Available, Do not alter URL');
+            req.flash('errorMessage', 'Paragraph is not Available, Do not alter URL');
             res.redirect('/exam/readingSection');
         } else {
             res.render("examcreatorviews/addReadQuestion", {
@@ -201,14 +201,17 @@ router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
 });
 
 router.post('/readingSection/insertques', (req, res) => {
-    const {question, paragraphid, qtype, options, correct_index} = req.body;
+    const {question, paragraphid, qtype, option1, option2, option3, option4, correct_index} = req.body;
 
     let readingQuestions = ""; 
     if(qtype == 'optional'){
         readingQuestions = {
             question,
             qtype,
-            options,
+            option1, 
+            option2, 
+            option3, 
+            option4,
             correct_index
         }
     } else {

@@ -9,9 +9,18 @@ const readingSectionQuestions = new mongoose.Schema({
         type : String,
         enum : ['optional', 'singleliner', 'multipleliner']
     },
-    options : [{
+    option1 : {
         type : String
-    }],
+    },
+    option2 : {
+        type : String
+    },
+    option3 : {
+        type : String
+    },
+    option4 : {
+        type : String
+    },
     correct_index : {
         type : Number
     }
