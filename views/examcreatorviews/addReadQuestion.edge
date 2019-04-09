@@ -70,6 +70,7 @@
             </div>
             <div class="col-lg-6">
                 @if(para.questions.length)
+                <h5>Questions</h5>
                 @each(this_object in para.questions)
                     <div class="ques">
                         <h6 class="this_question">Q{{($loop.index + 1)}}. {{{this_object.question}}}</h6>
@@ -83,7 +84,7 @@
                         correct option: {{this_object.correct_index}}
                         </p>
                         @endif
-                        <a class="btn bnt-xs btn-danger delalert" style="color:white;"><i class="fas fa-times-circle"></i> Delete </a>
+                        <a class="btn bnt-xs btn-danger delalert" style="color:white;" href="/exam/readingSection/para/{{para._id}}/delques/{{this_object._id}}"><i class="fas fa-times-circle"></i> Delete </a>
                     </div>
                 @endeach
                 @else

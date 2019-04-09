@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
 const readingSectionDB = require('../models/readingSection.model');
-//const readingQuestions = require('../models/readingQuestions.model');
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 
@@ -130,8 +129,11 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 
 /*
     =================Reading Section Start=======================
+                            *********
     following route will open the page from where exam controller
     can CRUD Reading Section Paragraphs and Questions.
+                            *********
+    =============================================================
 */
 router.get('/readingSection', authoriseExaminer, async(req, res) => {
     const reading_paragraphs = await readingSectionDB.find({});
@@ -176,6 +178,40 @@ router.post('/readingSection/addPara', (req, res) => {
         }
         res.redirect('/exam/readingSection');
     });
+});
+
+/*
+    This will open up a page from where Examiner can update paragraph and level
+*/
+router.get('/readingSection/updatepara/:paragraphid', (req, res) => {
+    const paragraphid = req.params.paragraphid;
+    readingSectionDB.findById(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Paragraph is not Available, Do not alter URL');
+            res.redirect('/exam/readingSection');
+        } else {
+            res.render("examcreatorviews/updateReadPara", {
+                title : "Update paragraph",
+                keywords: "exam, create, Questions",
+                description : "Creating Reading section Questions here",
+                expert_in_lang : req.session.expert_in_lang,
+                para
+            });
+        }
+    });
+});
+
+router.post('/readingSection/updatepara/', (req, res) => {
+    const { paragraphid, lang_level, paragraph} = req.body;
+    readingSectionDB.findOneAndUpdate({_id:paragraphid}, {paragraph : paragraph, lang_level : lang_level}, (err, doc) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wrong, try again later!');
+        } else {
+            req.flash('successMessage', 'Paragraph updated successfully');
+        }
+        console.log(doc);
+        res.redirect('/exam/readingSection/');
+    })
 });
 
 /*
@@ -253,10 +289,35 @@ router.get('/readingSection/delpara/:paragraphid', (req, res) => {
 })
 
 /*
+    Following route will delete the question stored in along paragraph
+*/
+router.get('/readingSection/para/:paragraphid/delques/:quesid', (req,res) =>{
+    const paragraphid = req.params.paragraphid;
+    const quesid = req.params.quesid;
 
+    readingSectionDB.findOne({_id:paragraphid}, (err, section) => {
+        if(err){
+            req.flash('errorMessage', 'Some error Occured');
+        } else {
+            section.questions.id(quesid).remove();
+            section.save();
+            req.flash('successMessage', 'Question Deleted Successfully');
+        }
+        res.redirect('/exam/readingSection/insertques/'+paragraphid);
+    });
+});
+// ******************Reading Section Ended*************************
+
+/*
+    =================Listening Section Start=======================
+                            *********
+    following route will open the page from where exam controller
+    can CRUD Listening Questions.
+                            *********
+    ===============================================================
 */
 router.get('/listeningSection', (req, res) => {
-    res.render("examcreator/listenview", {
+    res.render("examcreatorviews/ListenSection/listenview", {
         title : "Listening Section",
         keywords: "exam, create, Questions",
         description : "Creating Listening section Questions here"
