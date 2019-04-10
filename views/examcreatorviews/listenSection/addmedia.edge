@@ -1,0 +1,115 @@
+@layout('layouts.examiner_dashboard.edge')
+
+
+@section('body')
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        Upload Media from here.
+    </div>
+    <div class="card-body">
+        <form action="/exam/readingSection/addPara/" method="POST">
+            <div class="form-group">
+                <label for="exampleFormControlSelect2">Question Level</label>
+                <select class="form-control" name="lang_level" id="exampleFormControlSelect2">
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="readingParagraph">Media Type</label>
+                <select name="" id="" class="form-control">
+                    <option value="video">Video</option>
+                    <option value="audio">Audio</option>
+                </select>
+            </div>
+            <div class="form-group">
+                    <label for="readingParagraph">Select File</label>
+                    <div class="upload">
+                        <input type="file" name="upload"/>
+                    </div>
+                </div>
+            <button type="submit" class="btn btn-info btn-xs">Save</button>
+        </form>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script src="/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    var ckeditor4_config = {
+        customConfig: '',
+        toolbarGroups: [
+            // Here name has no effect but groups has
+            {
+                name: 'pramukhime',
+                groups: ['pramukhime']
+            },
+            {
+                name: 'document',
+                groups: ['mode', 'document', 'doctools']
+            },
+            {
+                name: 'clipboard',
+                groups: ['clipboard', 'undo']
+            },
+            {
+                name: 'editing',
+                groups: ['find', 'selection', 'spellchecker', 'editing']
+            },
+            {
+                name: 'forms',
+                groups: ['forms']
+            },
+            '/',
+            {
+                name: 'basicstyles',
+                groups: ['basicstyles', 'cleanup']
+            },
+            {
+                name: 'paragraph',
+                groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']
+            },
+            {
+                name: 'links',
+                groups: ['links']
+            },
+            {
+                name: 'insert',
+                groups: ['insert']
+            },
+            '/',
+            {
+                name: 'styles',
+                groups: ['styles']
+            },
+            {
+                name: 'colors',
+                groups: ['colors']
+            },
+            {
+                name: 'tools',
+                groups: ['tools']
+            },
+            {
+                name: 'others',
+                groups: ['others']
+            },
+            {
+                name: 'about',
+                groups: ['about']
+            }
+        ],
+        // Adding pramukhime plugin
+        extraPlugins: 'pramukhime',
+        pramukhime_options: {
+            selected_value: 'pramukhindic:{{expert_in_lang}}', // To know more, go into ckeditor/samples dir. open example html to understand
+        },
+    };
+    CKEDITOR.replace('readingParagraph', ckeditor4_config);
+</script>
+@endsection

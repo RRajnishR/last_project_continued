@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
 const readingSectionDB = require('../models/readingSection.model');
+const listeningSectionDB = require('../models/listeningSection.model')
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 
@@ -127,14 +128,40 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
     });
 });
 
+
+
+
+
+
 /*
-    =================Reading Section Start=======================
-                            *********
-    following route will open the page from where exam controller
-    can CRUD Reading Section Paragraphs and Questions.
-                            *********
-    =============================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               =================Reading Section Start=======================
+                                                       *********
+                               following route will open the page from where exam controller
+                               can CRUD Reading Section Paragraphs and Questions.
+                                                       *********
+                               =============================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
 */
+
+
+
+
+
+
+
 router.get('/readingSection', authoriseExaminer, async(req, res) => {
     const reading_paragraphs = await readingSectionDB.find({});
     res.render("examcreatorviews/readview", {
@@ -309,16 +336,44 @@ router.get('/readingSection/para/:paragraphid/delques/:quesid', (req,res) =>{
 // ******************Reading Section Ended*************************
 
 /*
-    =================Listening Section Start=======================
-                            *********
-    following route will open the page from where exam controller
-    can CRUD Listening Questions.
-                            *********
-    ===============================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               =================Listening Section Start=======================
+                                                       *********
+                               following route will open the page from where exam controller
+                               can CRUD Listening Questions.
+                                                       *********
+                               ===============================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
 */
-router.get('/listeningSection', (req, res) => {
-    res.render("examcreatorviews/ListenSection/listenview", {
+router.get('/listeningSection', async(req, res) => {
+    const listendata = await listeningSectionDB.find({});
+    res.render("examcreatorviews/listenSection/listenview", {
         title : "Listening Section",
+        keywords: "exam, create, Questions",
+        description : "Creating Listening section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        listendata
+    });
+});
+
+router.get('/listenSection/addMedia', (req, res) => {
+    res.render("examcreatorviews/listenSection/addmedia", {
+        title: "Add Media From Here",
         keywords: "exam, create, Questions",
         description : "Creating Listening section Questions here"
     });

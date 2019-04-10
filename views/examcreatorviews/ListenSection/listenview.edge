@@ -1,1 +1,66 @@
 @layout('layouts.examiner_dashboard.edge')
+
+@section('style')
+<!-- Page level plugin CSS-->
+<link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+@endsection
+
+
+@section('body')
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/exam/dashboard/">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">Reading Section</li>
+</ol>
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-header">
+      <i class="fas fa-table"></i>
+      List of all video/audios 
+      <a href="/exam/listenSection/addMedia/" class="btn btn-warning btn-xs float-right" data-toggle="tooltip" data-placement="auto" title="Upload New Media">
+          <i class="fas fa-file-alt"></i> New Media 
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Upload Date</th>
+              <th>Question Level</th>
+              <th>No. Of Questions</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if(listendata.length>0)
+              <tr>
+                  <td>{{$loop.index + 1}}</td>
+                  <td>{{listendata.title}}</td>
+                  <td>{{listendata.document_type}}</td>
+                  <td>{{listendata.createdAt.toDateString()}}</td>
+                  <td>{{listendata.lang_level}}</td>
+                  <td>{{listendata.questions.length}}</td>
+                  <td>
+                        <a href="" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="auto" title="Add Questions for this Media"><i class="far fa-plus-square"></i></a> 
+                        <a href="" class="btn btn-xs btn-danger delalert" data-toggle="tooltip" data-placement="auto" title="Delete this Media"><i class="far fa-trash-alt"></i></a>
+                  </td>
+              </tr>
+            @else
+            <tr>
+                <td colspan="7" style="text-align:center;">No Data Found! List will populate itself, when there are questions.</td>
+            </tr>
+            @endif
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+  </div>
+@endsection
