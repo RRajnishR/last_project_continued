@@ -1,6 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 var router = express.Router();
+const path = require('path');
+const fs = require('fs');
 const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
@@ -124,7 +126,8 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
     res.render("examcreatorviews/dashboard", {
         title : "Exam Creators DashBoard",
         keywords: "exam, create, Questions",
-        description : "Protected Dashboard for Exam Creators"
+        description : "Protected Dashboard for Exam Creators",
+        language : req.session.expert_in_lang,
     });
 });
 
@@ -158,7 +161,15 @@ router.get('/dashboard', authoriseExaminer, (req, res) => {
 
 
 
+function makeid(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    for (var i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 
 
@@ -170,6 +181,7 @@ router.get('/readingSection', authoriseExaminer, async(req, res) => {
         description : "Creating Reading section Questions here",
         successMessage : req.flash('successMessage'),
         errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
         reading_paragraphs
     });
 });
@@ -182,6 +194,7 @@ router.get('/readingSection/addPara', authoriseExaminer, (req, res) => {
         keywords: "exam, create, Question",
         description : "Creating Reading section Questions here",
         expert_in_lang : req.session.expert_in_lang,
+        language : req.session.expert_in_lang,
     });
 });
 /*
@@ -198,7 +211,7 @@ router.post('/readingSection/addPara', (req, res) => {
     });
     readingSectionDB.create(readingSection, (err, paragraphdata) => {
         if(err){
-            console.log(err);
+            //console.log(err);
             req.flash('errorMessage', "Some Problem Occured. Try again later!");
         } else {
             req.flash('successMessage', "Paragraph Added, Now add Questions related to it by clicking on + button corresponding to your paragraph");
@@ -222,6 +235,7 @@ router.get('/readingSection/updatepara/:paragraphid', (req, res) => {
                 keywords: "exam, create, Questions",
                 description : "Creating Reading section Questions here",
                 expert_in_lang : req.session.expert_in_lang,
+                language : req.session.expert_in_lang,
                 para
             });
         }
@@ -257,6 +271,7 @@ router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
                 successMessage : req.flash('successMessage'),
                 errorMessage : req.flash('errorMessage'),
                 expert_in_lang : req.session.expert_in_lang,
+                language : req.session.expert_in_lang,
                 para
             });
         }
@@ -367,18 +382,105 @@ router.get('/listeningSection', async(req, res) => {
         description : "Creating Listening section Questions here",
         successMessage : req.flash('successMessage'),
         errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
         listendata
     });
 });
-
+// Get router to show the page
 router.get('/listenSection/addMedia', (req, res) => {
     res.render("examcreatorviews/listenSection/addmedia", {
         title: "Add Media From Here",
         keywords: "exam, create, Questions",
-        description : "Creating Listening section Questions here"
+        description : "Creating Listening section Questions here",
+        language : req.session.expert_in_lang,
+        errorMessage : req.flash('errorMessage')
     });
 });
 
+//post router to save the media
+router.post('/listenSection/addMedia', (req, res) => {
+    const { media } = req.files;
+    const { title, document_type, lang_level} = req.body;
+    
+    var allowed_mimetype = ["video/mp4", "video/ogg", "video/webm", "audio/ogg", "audio/mpeg", "audio/wav", "audio/mp3"];
+    if(!allowed_mimetype.includes(media.mimetype)){
+        req.flash('errorMessage', 'Only Video(Mp4, Ogg, webm Formats) and Audio(Mp3, wav, ogg Formats) allowed');
+        return res.redirect('/exam/listenSection/addMedia');
+    }
+
+    //Needs more segregation as Program should know that if it is a video then allow only video files and similar for audio
+
+    if(media.size > 31457280){
+        req.flash('errorMessage', 'Size of Media can not be larger than 30 MB');
+        return res.redirect('/exam/listenSection/addMedia');
+    }
+
+    let uploadPath; 
+    const pathname = makeid(3)+"_"+media.name;
+    if(document_type == "video"){
+        uploadPath = path.resolve(__dirname, '..', 'public/all_media/video', pathname);
+    } else {
+        uploadPath = path.resolve(__dirname, '..', 'public/all_media/audio', pathname);
+    }
+    
+    media.mv(uploadPath, (error) => {
+        if(error) {
+            req.flash('errorMessage', 'Something went wrong while uploading the media');
+            res.redirect('/exam/listeningSection');
+        }
+        listeningSectionDB.create({
+            title,
+            document_type,
+            lang_level,
+            path_of_file : (document_type=='video' ? '/all_media/video/' : '/all_media/audio/')+pathname,
+            mimetype : media.mimetype,
+            language : req.session.expert_in_lang,
+            exam_creator : req.session.examinerid
+        }, (err, post) =>{
+            if(err){
+                req.flash('errorMessage', 'Something went wrong while saving details into database');
+            } else {
+                req.flash('successMessage', 'Awesome, your media file was uploaded, Now add questions for it');
+            }
+            res.redirect('/exam/listeningSection');
+        });
+    });
+});
+/*
+    Deletes Media from Listening Section.
+*/
+router.get('/listeningSection/delQues/:id', (req, res) => {
+    const paragraphid = req.params.id;
+    listeningSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Some error occured while deleting the media, Try again later');
+        } 
+        //console.log(para);
+        fs.unlink(para.path_of_file, ()=>{
+            req.flash('successMessage', 'Media deleted successfully');
+        });
+        res.redirect('/exam/listeningSection');
+    });
+});
+
+router.get('/listeningSection/addQues/:id', async(req, res) => {
+    const listenId = req.params.id;
+    const listenpart = listeningSectionDB.findById({_id: listenId}, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Could not find the media details, try again later');
+            res.redirect('/exam/listeningSection');
+        } else {
+            res.render("examcreatorviews/listenSection/addQues", {
+                title: "Add Media Questions From Here",
+                keywords: "exam, create, Questions",
+                description : "Creating Listening section Questions here",
+                language : req.session.expert_in_lang,
+                expert_in_lang : req.session.expert_in_lang,
+                para
+            });
+        }
+    })
+});
 /*
 
 */

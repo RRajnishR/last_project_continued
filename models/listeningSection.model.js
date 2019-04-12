@@ -39,6 +39,10 @@ const ListeningSectionSchema = new mongoose.Schema({
         type : String,
         required : [true, 'Error while Uploading']
     },
+    mimetype:{
+        type : String,
+        required : [true, 'Need this to play the file']
+    },
     language : {
         type : String,
         required : true
@@ -49,11 +53,11 @@ const ListeningSectionSchema = new mongoose.Schema({
         default : 'A1'
     },
     questions : [ListeningQuestions],
-    uploader : {
+    exam_creator : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'examcreator'
     },
-    createdAt : {
+    upload_date : {
         type : Date,
         default : new Date()
     }

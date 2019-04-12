@@ -40,18 +40,20 @@
           </thead>
           <tbody>
             @if(listendata.length>0)
+              @each(data in listendata)
               <tr>
-                  <td>{{$loop.index + 1}}</td>
-                  <td>{{listendata.title}}</td>
-                  <td>{{listendata.document_type}}</td>
-                  <td>{{listendata.createdAt.toDateString()}}</td>
-                  <td>{{listendata.lang_level}}</td>
-                  <td>{{listendata.questions.length}}</td>
-                  <td>
-                        <a href="" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="auto" title="Add Questions for this Media"><i class="far fa-plus-square"></i></a> 
-                        <a href="" class="btn btn-xs btn-danger delalert" data-toggle="tooltip" data-placement="auto" title="Delete this Media"><i class="far fa-trash-alt"></i></a>
-                  </td>
+                <td>{{$loop.index + 1}}</td>
+                <td>{{truncate(data.title, 60, '....')}}</td>
+                <td>{{data.document_type}}</td>
+                <td>{{data.upload_date.toDateString()}}</td>
+                <td>{{data.lang_level}}</td>
+                <td>{{data.questions.length}}</td>
+                <td>
+                      <a href="/exam/listeningSection/addQues/{{data._id}}" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="auto" title="Add Questions for this Media"><i class="far fa-plus-square"></i></a> 
+                      <a href="/exam/listeningSection/delQues/{{data._id}}" class="btn btn-xs btn-danger delalert" data-toggle="tooltip" data-placement="auto" title="Delete this Media"><i class="far fa-trash-alt"></i></a>
+                </td>
               </tr>
+              @endeach
             @else
             <tr>
                 <td colspan="7" style="text-align:center;">No Data Found! List will populate itself, when there are questions.</td>
