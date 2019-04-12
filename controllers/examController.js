@@ -476,11 +476,67 @@ router.get('/listeningSection/addQues/:id', async(req, res) => {
                 description : "Creating Listening section Questions here",
                 language : req.session.expert_in_lang,
                 expert_in_lang : req.session.expert_in_lang,
+                errorMessage : req.flash('errorMessage'),
+                successMessage : req.flash('successMessage'),
                 para
             });
         }
     })
 });
+//Inserting Questions in corresponding to the Media 
+router.post('/listeningSection/insertques', (req, res) => {
+    const {question, paragraphid, qtype, option1, option2, option3, option4, correct_index} = req.body;
+
+    let listeningQuestions = ""; 
+    if(qtype == 'optional'){
+        listeningQuestions = {
+            question,
+            qtype,
+            option1, 
+            option2, 
+            option3, 
+            option4,
+            correct_index
+        }
+    } else {
+        listeningQuestions = {
+            question,
+            qtype
+        }
+    }
+    listeningSectionDB.findOne({_id : paragraphid}, (err, section) => {
+        if(err){
+            console.log("Error while searching..",err);
+        } else {
+            section.questions.push(listeningQuestions);
+            section.save(err => {
+                if(err){
+                    req.flash('errorMessage', 'Some error occured while updating into the database')
+                } else {
+                    req.flash('successMessage', 'Question Added!');
+                }
+            }); 
+            res.redirect('/exam/listeningSection/addQues/'+paragraphid);
+        }
+    })
+});
+
+router.get('/listeningSection/para/:paragraphid/delques/:quesid', (req,res) =>{
+    const paragraphid = req.params.paragraphid;
+    const quesid = req.params.quesid;
+
+    listeningSectionDB.findOne({_id:paragraphid}, (err, section) => {
+        if(err){
+            req.flash('errorMessage', 'Some error Occured');
+        } else {
+            section.questions.id(quesid).remove();
+            section.save();
+            req.flash('successMessage', 'Question Deleted Successfully');
+        }
+        res.redirect('/exam/listeningSection/addQues/'+paragraphid);
+    });
+});
+
 /*
 
 */

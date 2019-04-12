@@ -26,7 +26,7 @@
                   <h4>5 questions for this Paragraph has been completed.</h4>
                 @else
                 <h5>Add Questions from here</h5>
-                  <form action="/exam/readingSection/insertques" method="POST" autocomplete="off">
+                  <form id="thisform" action="/exam/readingSection/insertques" method="POST" autocomplete="off">
                         <div class="form-group">
                             <label for="Question">Question</label>
                             <textarea class="form-control" name="question" id="question" cols="30" rows="10" placeholder="Your Question Here" required></textarea>
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-xs btn-info" ><i class="far fa-save"></i> Save</button>
+                            <button type="button" onclick="checkandsubmit()" class="btn btn-xs btn-info" ><i class="far fa-save"></i> Save</button>
                         </div>
                   </form>
                 @endif
@@ -107,13 +107,34 @@
             }
         }
 
-        // function checkandsubmit(){
-        //     var e = document.getElementById("qtype");
-        //     var option = e.options[e.selectedIndex].value;
-        //     if(option=="optional"){
-        //         if()
-        //     }
-        // }
+        function checkandsubmit(){
+            var e = document.getElementById("qtype");
+            var option = e.options[e.selectedIndex].value;
+            
+            if(document.getElementById('question').value == ""){
+                alert('Question is required!');
+                return false;
+            }
+
+            if(option==""){
+                alert('Type of question is required too');
+                return false;
+            }
+
+            if(option == "optional"){
+                var  a= document.getElementById('option1').value;
+                var  b= document.getElementById('option2').value;
+                var  c= document.getElementById('option3').value;
+                var  d= document.getElementById('option4').value;
+                var  f= document.getElementById('correct_index').value;
+                if(a==null || a=="",b==null || b=="",c==null || c=="",d==null || d=="" || f==null || f==""){
+                    alert('Please Fill up all the Fields, before submitting the form');
+                    return false;
+                }
+            } 
+
+            document.getElementById('thisform').submit();
+        }
     </script>
     <script type="text/javascript" src="/ckeditor/plugins/pramukhime/js/pramukhime.js"></script>
     <script type="text/javascript" src="/ckeditor/plugins/pramukhime/js/pramukhindic.js"></script>
