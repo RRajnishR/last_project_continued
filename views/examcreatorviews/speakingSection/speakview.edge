@@ -1,0 +1,58 @@
+@layout('layouts.examiner_dashboard.edge')
+
+@section('style')
+<!-- Page level plugin CSS-->
+<link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+@endsection
+
+
+@section('body')
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/exam/dashboard/">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">Speaking Section</li>
+</ol>
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-header">
+      <i class="fas fa-table"></i>
+      List of all video/audios 
+      <a href="/exam/speakingSection/addQues/" class="btn btn-warning btn-xs float-right" data-toggle="tooltip" data-placement="auto" title="Create new Listening Question Set">
+          <i class="fas fa-file-alt"></i> New Question Set 
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Topic</th>
+              <th>Upload Date</th>
+              <th>Question Level</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+  </div>
+@endsection
+
+@section('scripts')
+<!-- Page level plugin JavaScript-->
+<script src="/vendor/datatables/jquery.dataTables.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
+@endsection

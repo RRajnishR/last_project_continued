@@ -6,41 +6,24 @@
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
-        Update Paragraph
+        Add Essay topic for Writing Section
     </div>
     <div class="card-body">
-        <form action="/exam/readingSection/updatePara/" method="POST">
+        <form action="/exam/writingSection/addTopic/" method="POST">
             <div class="form-group">
-                <input type="hidden" name="paragraphid" value="{{para._id}}">
                 <label for="exampleFormControlSelect2">Question Level</label>
                 <select class="form-control" name="lang_level" id="exampleFormControlSelect2">
-                        @if(para.lang_level=="A1")
-                        <option value="A1" selected>A1</option>
-                        @else
-                        <option value="A1">A1</option>
-                        @endif
-                        @if(para.lang_level=="A2")
-                        <option value="A2" selected>A2</option>
-                        @else
-                        <option value="A2">A2</option>
-                        @endif
-                        @if(para.lang_level=="B1")
-                        <option value="B1" selected>B1</option>
-                        @else
-                        <option value="B1">B1</option>
-                        @endif
-                        @if(para.lang_level=="B2")
-                        <option value="B2" selected>B2</option>  
-                        @else
-                        <option value="B2">B2</option>
-                        @endif
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="readingParagraph">Paragraph for reading section</label>
-                <textarea class="form-control" name="paragraph" id="readingParagraph" rows="3">{{{para.paragraph}}}</textarea>
+                <label for="writingParagraph">Topic for reading section</label>
+                <textarea class="form-control" name="topic" id="writingParagraph" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-info btn-xs">Update</button>
+            <button type="submit" class="btn btn-info btn-xs">Save</button>
         </form>
     </div>
 </div>
@@ -115,9 +98,9 @@
         // Adding pramukhime plugin
         extraPlugins: 'pramukhime',
         pramukhime_options: {
-            selected_value: 'pramukhindic:{{expert_in_lang}}', // To know more, go into ckeditor/samples dir. open example html to understand
+            selected_value: 'pramukhindic:{{language}}', // To know more, go into ckeditor/samples dir. open example html to understand
         },
     };
-    CKEDITOR.replace('readingParagraph', ckeditor4_config);
+    CKEDITOR.replace('writingParagraph', ckeditor4_config);
 </script>
 @endsection

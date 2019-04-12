@@ -1,46 +1,28 @@
 @layout('layouts.examiner_dashboard.edge')
 
-
 @section('body')
 
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
-        Update Paragraph
+        Add New Questions set for Listening Section
     </div>
     <div class="card-body">
-        <form action="/exam/readingSection/updatePara/" method="POST">
+        <form action="/exam/readingSection/addPara/" method="POST">
             <div class="form-group">
-                <input type="hidden" name="paragraphid" value="{{para._id}}">
                 <label for="exampleFormControlSelect2">Question Level</label>
                 <select class="form-control" name="lang_level" id="exampleFormControlSelect2">
-                        @if(para.lang_level=="A1")
-                        <option value="A1" selected>A1</option>
-                        @else
-                        <option value="A1">A1</option>
-                        @endif
-                        @if(para.lang_level=="A2")
-                        <option value="A2" selected>A2</option>
-                        @else
-                        <option value="A2">A2</option>
-                        @endif
-                        @if(para.lang_level=="B1")
-                        <option value="B1" selected>B1</option>
-                        @else
-                        <option value="B1">B1</option>
-                        @endif
-                        @if(para.lang_level=="B2")
-                        <option value="B2" selected>B2</option>  
-                        @else
-                        <option value="B2">B2</option>
-                        @endif
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="readingParagraph">Paragraph for reading section</label>
-                <textarea class="form-control" name="paragraph" id="readingParagraph" rows="3">{{{para.paragraph}}}</textarea>
+                <label for="">Paragraph for reading section</label>
+                <textarea class="form-control" name="directed_interview_ques" id="" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-info btn-xs">Update</button>
+            <button type="submit" class="btn btn-info btn-xs">Save</button>
         </form>
     </div>
 </div>

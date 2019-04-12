@@ -7,7 +7,9 @@ const mongoose = require('mongoose');
 const languages = require('../models/language.model');
 const examiner = require('../models/examiner.model');
 const readingSectionDB = require('../models/readingSection.model');
-const listeningSectionDB = require('../models/listeningSection.model')
+const listeningSectionDB = require('../models/listeningSection.model');
+const writingSectionDB = require('../models/writingSection.model');
+const speakingSectionDB = require('../models/speakingSection.model');
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 
@@ -506,7 +508,8 @@ router.post('/listeningSection/insertques', (req, res) => {
     }
     listeningSectionDB.findOne({_id : paragraphid}, (err, section) => {
         if(err){
-            console.log("Error while searching..",err);
+            console.log("Error while searching..", err);
+            req.flash('errorMessage', 'Some error occured while updating');
         } else {
             section.questions.push(listeningQuestions);
             section.save(err => {
@@ -537,27 +540,174 @@ router.get('/listeningSection/para/:paragraphid/delques/:quesid', (req,res) =>{
     });
 });
 
-/*
+// ******************Listening Section Ended*************************
 
+/*
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               =================Writing Section Starts=======================
+                                                       *********
+                               following route will open the page from where exam controller
+                               can CRUD writing Questions.
+                                                       *********
+                               ==============================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
 */
-router.get('/writingSection', (req, res) => {
-    res.render("examcreator/writingview", {
-        title : "writing Section",
+router.get('/writingSection', async(req, res) => {
+    const writing = await writingSectionDB.find({});
+    res.render("examcreatorviews/writingSection/writingview", {
+        title : "Manage writing Section",
         keywords: "exam, create, Questions",
-        description : "Creating writing section Questions here"
+        description : "Creating writing section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
+        writing
     });
 });
 
-/*
-
-*/
-router.get('/speakingSection', (req, res) => {
-    res.render("examcreator/speakview", {
-        title : "Speaking Section",
+//Following opens up a page from where examiner can add topics
+router.get('/writingSection/addTopic/', (req, res) =>{
+    res.render("examcreatorviews/writingSection/addTopic", {
+        title : "Add Topics for writing Section",
         keywords: "exam, create, Questions",
-        description : "Creating Speaking section Questions here"
+        description : "Creating writing section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang
     });
 });
+
+//following route save the data from the above page to DB
+router.post('/writingSection/addTopic/', (req, res) => {
+    const { lang_level, topic } = req.body;
+    if(topic=="" || topic==null){
+        req.flash('errorMessage', 'Topic Can not be empty');
+        return res.redirect('/exam/writingSection/');
+    }
+    writingSectionDB.create({
+        topic,
+        lang_level,
+        language : req.session.expert_in_lang,
+        exam_creator : req.session.examinerid,
+    }, (err, topic) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wrong while saving details into database');
+        } else {
+            req.flash('successMessage', 'Awesome, your Topic was uploaded');
+        }
+        res.redirect('/exam/writingSection');
+    });
+});
+
+//Following route will open up a page from where you can edit the content of Topic
+router.get('/writingSection/updatepara/:id', (req, res) => {
+    const paragraphid = req.params.id;
+    writingSectionDB.findById(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Topic is not Available, Do not alter URL');
+            return res.redirect('/exam/writingSection');
+        } else {
+            res.render("examcreatorviews/writingSection/editTopic", {
+                title : "Edit Topics for writing Section",
+                keywords: "exam, create, Questions",
+                description : "Creating writing section Questions here",
+                successMessage : req.flash('successMessage'),
+                errorMessage : req.flash('errorMessage'),
+                language : req.session.expert_in_lang,
+                para
+            });
+        }
+    });
+});
+
+//Following route update the topic details in DB
+router.post('/writingSection/updatepara/', (req, res) => {
+    const { paragraphid, lang_level, topic} = req.body;
+    writingSectionDB.findOneAndUpdate({_id:paragraphid}, {topic : topic, lang_level : lang_level}, (err, doc) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wrong, try again later!');
+        } else {
+            req.flash('successMessage', 'Topic updated successfully');
+        }
+        res.redirect('/exam/writingSection/');
+    })
+});
+
+//following route deletes topic 
+router.get('/writingSection/delpara/:id', (req, res) => {
+    const paragraphid = req.params.id;
+    writingSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Some error occured while deleting the topic, Try again later');
+        } else {
+            req.flash('successMessage', 'Topic deleted successfully');
+        }
+        res.redirect('/exam/writingSection');
+    });
+});
+// ******************Writing Section Ended*************************
+
+/*
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               =================Speaking Section Starts=======================
+                                                       *********
+                               following route will open the page from where exam controller
+                               can CRUD speaking Questions.
+                                                       *********
+                               ================================================================
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+                               .
+*/
+router.get('/speakingSection', async(req, res) => {
+    const speakingdocs = await speakingSectionDB.find({});
+    res.render("examcreatorviews/speakingSection/speakview", {
+        title : "Manage Question Set for speaking Section",
+        keywords: "exam, create, Questions",
+        description : "Creating speaking section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
+        speakingdocs
+    });
+});
+
+router.get('/speakingSection/addQues/', (req, res) => {
+    res.render("examcreatorviews/speakingSection/speakview", {
+        title : "Add Topics for speaking Section",
+        keywords: "exam, create, Questions",
+        description : "Creating speaking section Questions here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
+    });
+})
 
 
 module.exports = router;
