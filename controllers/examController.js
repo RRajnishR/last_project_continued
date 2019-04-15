@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
           })
         } else { 
             req.flash('errorMessage', "User Not Found");
-            res.redirect('/exam')
+            res.redirect('/exam');
         }
       })
 });
@@ -202,7 +202,7 @@ router.get('/readingSection/addPara', authoriseExaminer, (req, res) => {
 /*
     following will retrieve the form data from add Paragraph Page and store it into the database
 */
-router.post('/readingSection/addPara', (req, res) => {
+router.post('/readingSection/addPara', authoriseExaminer, (req, res) => {
     //console.log(req.body);
     const { lang_level, paragraph } = req.body;
     const readingSection = new readingSectionDB({
@@ -260,7 +260,7 @@ router.post('/readingSection/updatepara/', (req, res) => {
 /*
     This will open up a page from where Examiner can insert questions in correspondance to paragraph
 */
-router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
+router.get('/readingSection/insertques/:paragraphid', authoriseExaminer, async(req, res) => {
     const paragraph = readingSectionDB.findById(req.params.paragraphid, (err, para) => {
         if(err){
             req.flash('errorMessage', 'Paragraph is not Available, Do not alter URL');
@@ -280,7 +280,7 @@ router.get('/readingSection/insertques/:paragraphid', async(req, res) => {
     });
 });
 
-router.post('/readingSection/insertques', (req, res) => {
+router.post('/readingSection/insertques', authoriseExaminer, (req, res) => {
     const {question, paragraphid, qtype, option1, option2, option3, option4, correct_index} = req.body;
 
     let readingQuestions = ""; 
@@ -320,7 +320,7 @@ router.post('/readingSection/insertques', (req, res) => {
 /*
     Following route will delete the paragraph stored in database using paragraphid
 */
-router.get('/readingSection/delpara/:paragraphid', (req, res) => {
+router.get('/readingSection/delpara/:paragraphid', authoriseExaminer, (req, res) => {
     const paragraphid = req.params.paragraphid;
     readingSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
         if(err){
@@ -335,7 +335,7 @@ router.get('/readingSection/delpara/:paragraphid', (req, res) => {
 /*
     Following route will delete the question stored in along paragraph
 */
-router.get('/readingSection/para/:paragraphid/delques/:quesid', (req,res) =>{
+router.get('/readingSection/para/:paragraphid/delques/:quesid', authoriseExaminer, (req,res) =>{
     const paragraphid = req.params.paragraphid;
     const quesid = req.params.quesid;
 
@@ -376,7 +376,7 @@ router.get('/readingSection/para/:paragraphid/delques/:quesid', (req,res) =>{
                                .
                                .
 */
-router.get('/listeningSection', async(req, res) => {
+router.get('/listeningSection', authoriseExaminer, async(req, res) => {
     const listendata = await listeningSectionDB.find({});
     res.render("examcreatorviews/listenSection/listenview", {
         title : "Listening Section",
@@ -389,7 +389,7 @@ router.get('/listeningSection', async(req, res) => {
     });
 });
 // Get router to show the page
-router.get('/listenSection/addMedia', (req, res) => {
+router.get('/listenSection/addMedia', authoriseExaminer, (req, res) => {
     res.render("examcreatorviews/listenSection/addmedia", {
         title: "Add Media From Here",
         keywords: "exam, create, Questions",
@@ -400,7 +400,7 @@ router.get('/listenSection/addMedia', (req, res) => {
 });
 
 //post router to save the media
-router.post('/listenSection/addMedia', (req, res) => {
+router.post('/listenSection/addMedia', authoriseExaminer, (req, res) => {
     const { media } = req.files;
     const { title, document_type, lang_level} = req.body;
     
@@ -451,7 +451,7 @@ router.post('/listenSection/addMedia', (req, res) => {
 /*
     Deletes Media from Listening Section.
 */
-router.get('/listeningSection/delQues/:id', (req, res) => {
+router.get('/listeningSection/delQues/:id', authoriseExaminer, (req, res) => {
     const paragraphid = req.params.id;
     listeningSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
         if(err){
@@ -465,7 +465,7 @@ router.get('/listeningSection/delQues/:id', (req, res) => {
     });
 });
 
-router.get('/listeningSection/addQues/:id', async(req, res) => {
+router.get('/listeningSection/addQues/:id', authoriseExaminer, async(req, res) => {
     const listenId = req.params.id;
     const listenpart = listeningSectionDB.findById({_id: listenId}, (err, para) => {
         if(err){
@@ -486,7 +486,7 @@ router.get('/listeningSection/addQues/:id', async(req, res) => {
     })
 });
 //Inserting Questions in corresponding to the Media 
-router.post('/listeningSection/insertques', (req, res) => {
+router.post('/listeningSection/insertques', authoriseExaminer,  (req, res) => {
     const {question, paragraphid, qtype, option1, option2, option3, option4, correct_index} = req.body;
 
     let listeningQuestions = ""; 
@@ -524,7 +524,7 @@ router.post('/listeningSection/insertques', (req, res) => {
     })
 });
 
-router.get('/listeningSection/para/:paragraphid/delques/:quesid', (req,res) =>{
+router.get('/listeningSection/para/:paragraphid/delques/:quesid', authoriseExaminer, (req,res) =>{
     const paragraphid = req.params.paragraphid;
     const quesid = req.params.quesid;
 
@@ -566,7 +566,7 @@ router.get('/listeningSection/para/:paragraphid/delques/:quesid', (req,res) =>{
                                .
                                .
 */
-router.get('/writingSection', async(req, res) => {
+router.get('/writingSection', authoriseExaminer, async(req, res) => {
     const writing = await writingSectionDB.find({});
     res.render("examcreatorviews/writingSection/writingview", {
         title : "Manage writing Section",
@@ -580,7 +580,7 @@ router.get('/writingSection', async(req, res) => {
 });
 
 //Following opens up a page from where examiner can add topics
-router.get('/writingSection/addTopic/', (req, res) =>{
+router.get('/writingSection/addTopic/', authoriseExaminer, (req, res) =>{
     res.render("examcreatorviews/writingSection/addTopic", {
         title : "Add Topics for writing Section",
         keywords: "exam, create, Questions",
@@ -592,7 +592,7 @@ router.get('/writingSection/addTopic/', (req, res) =>{
 });
 
 //following route save the data from the above page to DB
-router.post('/writingSection/addTopic/', (req, res) => {
+router.post('/writingSection/addTopic/', authoriseExaminer, (req, res) => {
     const { lang_level, topic } = req.body;
     if(topic=="" || topic==null){
         req.flash('errorMessage', 'Topic Can not be empty');
@@ -614,7 +614,7 @@ router.post('/writingSection/addTopic/', (req, res) => {
 });
 
 //Following route will open up a page from where you can edit the content of Topic
-router.get('/writingSection/updatepara/:id', (req, res) => {
+router.get('/writingSection/updatepara/:id', authoriseExaminer, (req, res) => {
     const paragraphid = req.params.id;
     writingSectionDB.findById(paragraphid, (err, para) => {
         if(err){
@@ -635,7 +635,7 @@ router.get('/writingSection/updatepara/:id', (req, res) => {
 });
 
 //Following route update the topic details in DB
-router.post('/writingSection/updatepara/', (req, res) => {
+router.post('/writingSection/updatepara/', authoriseExaminer, (req, res) => {
     const { paragraphid, lang_level, topic} = req.body;
     writingSectionDB.findOneAndUpdate({_id:paragraphid}, {topic : topic, lang_level : lang_level}, (err, doc) => {
         if(err){
@@ -648,7 +648,7 @@ router.post('/writingSection/updatepara/', (req, res) => {
 });
 
 //following route deletes topic 
-router.get('/writingSection/delpara/:id', (req, res) => {
+router.get('/writingSection/delpara/:id', authoriseExaminer, (req, res) => {
     const paragraphid = req.params.id;
     writingSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
         if(err){
@@ -685,7 +685,7 @@ router.get('/writingSection/delpara/:id', (req, res) => {
                                .
                                .
 */
-router.get('/speakingSection', async(req, res) => {
+router.get('/speakingSection', authoriseExaminer, async(req, res) => {
     const speakingdocs = await speakingSectionDB.find({});
     res.render("examcreatorviews/speakingSection/speakview", {
         title : "Manage Question Set for speaking Section",
@@ -698,8 +698,8 @@ router.get('/speakingSection', async(req, res) => {
     });
 });
 
-router.get('/speakingSection/addQues/', (req, res) => {
-    res.render("examcreatorviews/speakingSection/speakview", {
+router.get('/speakingSection/addQues/', authoriseExaminer, (req, res) => {
+    res.render("examcreatorviews/speakingSection/addQues", {
         title : "Add Topics for speaking Section",
         keywords: "exam, create, Questions",
         description : "Creating speaking section Questions here",
@@ -707,7 +707,37 @@ router.get('/speakingSection/addQues/', (req, res) => {
         errorMessage : req.flash('errorMessage'),
         language : req.session.expert_in_lang,
     });
-})
+});
 
+router.post('/speakingSection/addQues/', authoriseExaminer, (req, res) => {
+    const { lang_level, directed_interview_ques, interaction_ques, point_of_view_ques } = req.body;
+    speakingSectionDB.create({
+        directed_interview_ques,
+        interaction_ques,
+        point_of_view_ques,
+        lang_level,
+        language : req.session.expert_in_lang,
+        exam_creator : req.session.examinerid
+    }, (err, doc) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wrong while saving data, try again later');
+            return res.redirect('/exam/speakingSection/addQues');
+        } 
+        req.flash('successMessage', 'New Question set was uploaded successfully');
+        res.redirect('/exam/speakingSection/'); 
+    });
+});
+
+router.get('/speakingSection/delQues/:id', authoriseExaminer, (req, res) => {
+    const paragraphid = req.params.id;
+    speakingSectionDB.findByIdAndDelete(paragraphid, (err, para) => {
+        if(err){
+            req.flash('errorMessage', 'Some error occured while deleting the topic, Try again later');
+        } else {
+            req.flash('successMessage', 'Question set deleted successfully');
+        }
+        res.redirect('/exam/speakingSection');
+    });
+});
 
 module.exports = router;

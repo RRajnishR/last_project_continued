@@ -1,0 +1,32 @@
+@layout('layouts.main_layout')
+
+@section('content')
+
+<div class="auth">
+		<div class="container">
+			<div class="auth__inner">
+				<div class="auth__media">
+                    {{--  This gif is downloaded from dribble, Designed by alicehodgedesign  --}}
+					<img src="/images/forgot.gif" alt="Logging In">
+				</div>
+				<div class="auth__auth">
+					<h1 class="auth__title">Forgot your password?</h1>
+					<p>Enter your registered email. We'll send you a recovery email.</p>
+					<form method='post' action="/user/login/" autocomplete="off" role="presentation" class="form">
+						<label>Email</label>
+						<input type="text" name="email" id='email' placeholder="you@example.com">
+						<button type='submit' class="button button__accent">Log in</button>
+						<a href="/user/login/"><h6 class="left-align" >Sign In</h6></a>
+					</form>
+				</div>
+				@if(success!='')
+					<div class="myAlert-top alert alert-success">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong><i class="fas fa-check-circle"></i></strong> {{ success }}
+					</div>
+				@endif
+			</div>
+		</div>
+	</div>
+
+@endsection

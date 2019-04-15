@@ -1,0 +1,33 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="app__menu">
+                <ul class="vMenu">
+                    <li><a href="/user/userpage"><i class="far fa-user-circle"></i> Profile page</a></li>
+                    <li><a href="/user/starttest" class="vMenu--active"><i class="fas fa-language"></i> Start Language Test</a></li>
+                    <li><a href="/user/results"><i class="fas fa-award"></i> Results</a></li>
+                </ul>
+            </div>
+            <div class="app__main">
+                <div class="text-container">
+                    <h3 class="app__main__title"><i class="fas fa-language"></i> Step 1: Select Language</h3>
+                    <hr>
+                    <div class="container-fluid">
+                        @if(lang.length > 0)
+                          @each(l in lang)
+                            <a href="/user/starttest/{{l.lang_name}}" class="btn btn-xs border border-warning text-info {{l.lang_status || 'disabled'}}">{{l.lang_name}}</a>
+                          @endeach
+                        @else
+                          <h4>Sorry, We are not able to connect to server. Come back again later.</h4>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br><br><br><br>
+@endsection

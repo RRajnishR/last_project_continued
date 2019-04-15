@@ -1,9 +1,44 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 var router = express.Router();
 const User = require('../models/users.model'); 
+const languagesDB = require('../models/language.model');
 
 router.get('/login', (req, res) => {
     res.render("userviews/loginUser",{
+        success: req.flash('successMessage'),
+        title: "Users Login Page",
+        description : "This page will log-in the user",
+        keywords: "Login into language test portal"
+    });
+});
+
+router.post('/login', (req, res) => {
+    const { email, password} = req.body;
+    User.findOne({ email }, (error, user) => {
+        if (user) {
+          // compare passwords.
+          bcrypt.compare(password, user.password, (error, same) => {
+            if (same) {
+              req.session.userid = user._id;
+              req.session.fullname = user.fullname;
+              req.session.dp = user.profile_image;
+              req.session.email = user.email;
+              res.redirect('/user/userpage');
+            } else {
+              req.flash('errorMessage', "Incorrect Password!");
+              res.redirect('/user/login');
+            }
+          });
+        } else { 
+            req.flash('errorMessage', "User Not Found");
+            res.redirect('/user/login');
+        }
+      })
+});
+
+router.get('/forgotpassword', (req, res) => {
+    res.render("userviews/forgotPass",{
         success: req.flash('successMessage'),
         title: "Users Login Page",
         description : "This page will log-in the user",
@@ -84,5 +119,70 @@ router.post('/register', (req, res) => {
     }    
 });
 
+
+/*
+.
+.
+.
+.
+.
+======================User's Functionality after login===================
+.
+.
+.
+.
+*/
+
+router.get('/userpage', (req, res) => {
+    res.render('userviews/userpage', {
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        title: "Users Profile",
+        description : "This page will update the user details",
+        keywords: "profile, language test portal"
+    });
+});
+
+router.post('/userpage', (req, res) => {
+    //have to write update code from here
+    req.flash('errorMessage', 'Sorry, updation failed. Try again after sometime');
+    res.redirect('/user/userpage');
+});
+
+router.get('/starttest', async(req, res) => {
+    const lang = await languagesDB.find({});
+    res.render('userviews/starttest', {
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        title: "Users Test Inititation",
+        description : "This page will help the user in starting his test",
+        keywords: "Start language test",
+        lang
+    });
+});
+
+router.get('/starttest/:langname', (req, res) => {
+    const lang = req.params.langname;
+    res.render('userviews/chooselevel', {
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        title: "Step 2 - Test Inititation",
+        description : "This page will help the user in starting his test",
+        keywords: "Choose language level",
+        lang
+    });
+});
+
+router.get('/starttest/:langname/level/:langlevel', (req, res) => {
+    const lang = req.param.langname;
+    const langlevel = req.params.langlevel;
+    //console.log(langlevel);
+})
 
 module.exports = router;

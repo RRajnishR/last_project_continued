@@ -8,7 +8,7 @@
         Add New Questions set for Listening Section
     </div>
     <div class="card-body">
-        <form action="/exam/readingSection/addPara/" method="POST">
+        <form id="thisform" action="/exam/speakingSection/addQues/" method="POST">
             <div class="form-group">
                 <label for="exampleFormControlSelect2">Question Level</label>
                 <select class="form-control" name="lang_level" id="exampleFormControlSelect2">
@@ -19,8 +19,44 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="">Paragraph for reading section</label>
-                <textarea class="form-control" name="directed_interview_ques" id="" rows="3" required></textarea>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="">Directed interview questions</label>
+                        <textarea class="form-control" name="directed_interview_ques" id="directed_interview_ques" rows="3" required></textarea>
+                        <span class="small text-success">*note: Use bulleted points and ask around 4-5 basic interview questions</span>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Example</h6>
+                        <img src="/images/part1.JPG" alt="part 1" width="100%">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="">Interaction Questions</label>
+                        <textarea class="form-control" name="interaction_ques" id="interaction_ques" rows="3" required></textarea>
+                        <span class="small text-success">*note: Use bulleted points and ask interactive questions (Continuous Questions)</span>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Example</h6>
+                        <img src="/images/part2.JPG" alt="part 1" width="100%">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="">Point of View Question</label>
+                        <textarea class="form-control" name="point_of_view_ques" id="point_of_view_ques" rows="3" required></textarea>
+                        <span class="small text-success">*note: Give 2 briefly described topics (Either "Side by side" or "Topic 1 & Topic 2"), you can add pictures along with them too.</span>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Example</h6>
+                        <img src="/images/part3.JPG" alt="part 3" width="100%">
+                        Then give 2 topics from which examinee can choose from.
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn btn-info btn-xs">Save</button>
         </form>
@@ -97,9 +133,12 @@
         // Adding pramukhime plugin
         extraPlugins: 'pramukhime',
         pramukhime_options: {
-            selected_value: 'pramukhindic:{{expert_in_lang}}', // To know more, go into ckeditor/samples dir. open example html to understand
+            selected_value: 'pramukhindic:{{language}}', // To know more, go into ckeditor/samples dir. open example html to understand
         },
     };
-    CKEDITOR.replace('readingParagraph', ckeditor4_config);
+    CKEDITOR.replace('directed_interview_ques', ckeditor4_config);
+    CKEDITOR.replace('interaction_ques', ckeditor4_config);
+    CKEDITOR.replace('point_of_view_ques', ckeditor4_config);
 </script>
+
 @endsection

@@ -483,7 +483,7 @@ a {
   outline: 0;
   text-decoration: none;
   transition: 0.7s;
-  color: inherit;
+  color: blueviolet;
 }
 
 .link {
@@ -1738,7 +1738,9 @@ select::-ms-expand {
 
   .vMenu a:hover {
     opacity: 1;
-    color: #6C63FF;
+    /* color: #6C63FF; */
+    color: red;
+    font-weight: bold;
   }
 
   .vMenu a:after {
@@ -1783,7 +1785,7 @@ select::-ms-expand {
 @media (min-width: 992px) {
   .vMenu--active {
     opacity: 1;
-    color: #6C63FF;
+    color: #0c092f;
   }
 
   .vMenu--active:after {

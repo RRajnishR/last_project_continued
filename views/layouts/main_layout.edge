@@ -7,6 +7,7 @@
     <meta name="description" content="{{description}}">
 	<meta name="keywords" content="{{keywords}}">
 	<meta name="author" content="Rajnish Kumar | http://iamrajnish.ml">
+	<link rel='stylesheet' href='/css/style.css' />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Baloo+Tamma|Roboto+Condensed" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -22,7 +23,6 @@
 			width: 96%;
 		}
 	</style>
-    <link rel='stylesheet' href='/css/style.css' />
 </head>
 <body>
 	<!-- Hero(extended) navbar -->
@@ -33,12 +33,21 @@
 	</button>
 	<div class="collapse navbar-collapse" id="collapsibleNavbar">
 		<ul class="navbar-nav ml-auto">
-		<li class="nav-item">
-			<a class="nav-link btn btn-outline-light text-light" href="/user/login"><i class="fas fa-sign-in-alt"></i> Login</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link btn btn-outline-light text-light" href="/user/register"><i class="fas fa-user-plus"></i> Signup</a>
-		</li>
+			@if(email=="" || email==null)
+			<li class="nav-item">
+				<a class="nav-link btn btn-outline-light text-light" href="/user/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link btn btn-outline-light text-light" href="/user/register"><i class="fas fa-user-plus"></i> Signup</a>
+			</li>
+			@else
+			<li class="nav-item">
+					<a class="nav-link text-light"><i class="far fa-user"></i> Hi, {{fullname.split(" ")[0]}}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link btn btn-outline-light text-light" href="/user/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+				</li>
+			@endif
 		</ul>
 	</div>  
 	</nav>
@@ -50,10 +59,7 @@
 				<div class="footer__data">
 					<div class="footer__data__item">
 						<div class="footer__row">
-							Created by <a href="#" target="_blank" class="footer__link">Katerina Limpitsouni</a>
-						</div>
-						<div class="footer__row">
-						Code/design by <a href="#" target="_blank" class="footer__link">Aggelos Gesoulis</a>
+							Created by <a href="#" target="_blank" class="footer__link">Rajnish Kumar</a>
 						</div>
 					</div>
 					<div class="footer__data__item">

@@ -1,0 +1,34 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="app__menu">
+                <ul class="vMenu">
+                    <li><a href="/user/userpage"><i class="far fa-user-circle"></i> Profile page</a></li>
+                    <li><a href="/user/starttest" class="vMenu--active"><i class="fas fa-language"></i> Start Language Test</a></li>
+                    <li><a href="/user/results"><i class="fas fa-award"></i> Results</a></li>
+                </ul>
+            </div>
+            <div class="app__main">
+                <div class="text-container">
+                    <h3 class="app__main__title"><i class="fas fa-language"></i> Step 2 : Choose Languge Level</h3>
+                    <hr>
+                    <div class="container-fluid">
+                       <h5>You have selected: "{{lang}}" Language</h5>
+                       Language certification levels : <br/><br/>
+                       <a href="/user/starttest/{{lang}}/level/A1" class="btn btn-xs border border-warning text-info">A1 - Basic</a>
+                       <a href="/user/starttest/{{lang}}/level/A2" class="btn btn-xs border border-warning text-info">A2 - Intermediate</a>
+                       <a href="/user/starttest/{{lang}}/level/B1" class="btn btn-xs border border-warning text-info">B1 - Advance</a>
+                       <a href="/user/starttest/{{lang}}/level/B2" class="btn btn-xs border border-warning text-info">B2 - Expert</a>
+                       <hr>
+                       Or : <a href="/user/starttest/{{lang}}/level/na" class="btn btn-xs border border-warning text-info">Start Exam without specifying any level</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br><br><br><br>
+@endsection

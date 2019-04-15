@@ -19,7 +19,7 @@
 <div class="card mb-3">
     <div class="card-header">
       <i class="fas fa-table"></i>
-      List of all video/audios 
+      List of all Question Set
       <a href="/exam/speakingSection/addQues/" class="btn btn-warning btn-xs float-right" data-toggle="tooltip" data-placement="auto" title="Create new Listening Question Set">
           <i class="fas fa-file-alt"></i> New Question Set 
       </a>
@@ -30,14 +30,32 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Topic</th>
+              <th>Interview Question</th>
+              <th>Interaction Question</th>
+              <th>POV Question</th>
               <th>Upload Date</th>
               <th>Question Level</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            
+            @if(speakingdocs.length > 0)
+              @each(data in speakingdocs)
+              <tr>
+                <td>{{$loop.index + 1}}</td>
+                <td>{{{truncate(data.directed_interview_ques, 30, '....')}}}</td>
+                <td>{{{truncate(data.interaction_ques, 30, '....')}}}</td>
+                <td><div style="width:100%; max-height:35px; overflow-x:hidden; overflow-y:scroll;">{{{data.point_of_view_ques}}}</div></td>
+                <td>{{data.upload_date.toDateString()}}</td>
+                <td>{{data.lang_level}}</td>
+                <td>
+                  <a href="/exam/speakingSection/delQues/{{data._id}}" class="btn btn-xs btn-danger delalert" data-toggle="tooltip" data-placement="auto" title="Delete this paragraph"><i class="far fa-trash-alt"></i></a> 
+                </td>
+              </tr>
+              @endeach
+            @else
+              <tr><td colspan="7" style="text-align:center">Data not found! Start adding Question setsdata</td></tr>
+            @endif
           </tbody>
         </table>
       </div>
