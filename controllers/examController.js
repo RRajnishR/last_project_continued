@@ -252,7 +252,7 @@ router.post('/readingSection/updatepara/', (req, res) => {
         } else {
             req.flash('successMessage', 'Paragraph updated successfully');
         }
-        console.log(doc);
+        //console.log(doc);
         res.redirect('/exam/readingSection/');
     })
 });

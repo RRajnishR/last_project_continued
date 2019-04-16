@@ -31,5 +31,14 @@ const responseSchema = new mongoose.Schema({
         question_id : String,
         response : String
     }],
+    reading_section_ques_2 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'readingSectionParagraphs',
+        required : true
+    },
+    read_responses_2 : [{
+        question_id : String,
+        response : String
+    }],
 
 });

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 var router = express.Router();
 const User = require('../models/users.model'); 
 const languagesDB = require('../models/language.model');
+const readingSectionDB = require('../models/readingSection.model');
 
 router.get('/login', (req, res) => {
     res.render("userviews/loginUser",{
@@ -180,9 +181,15 @@ router.get('/starttest/:langname', (req, res) => {
 });
 
 router.get('/starttest/:langname/level/:langlevel', (req, res) => {
-    const lang = req.param.langname;
-    const langlevel = req.params.langlevel;
-    //console.log(langlevel);
+    //Randomly select 2 paragraphs from reading section
+    //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
+    const docs = readingSectionDB.aggregate([
+        {$sample : {size : 2}}
+    ], (err, docs) => {
+        docs.forEach(element => {
+            console.log(element._id);
+        });
+    });
 })
 
 module.exports = router;

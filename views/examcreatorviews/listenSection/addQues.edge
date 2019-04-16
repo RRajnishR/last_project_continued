@@ -32,8 +32,8 @@
         <hr/>
         <div class="row">
             <div class="col-lg-6">
-                @if(para.questions.length>=5)
-                  <h4>5 questions for this Paragraph has been completed.</h4>
+                @if(para.questions.length>=10)
+                  <h4>Max 10 questions for this Media has been completed.</h4>
                 @else
                 <h5>Add Questions from here</h5>
                   <form id="thisform" action="/exam/listeningSection/insertques" method="POST" autocomplete="off">
