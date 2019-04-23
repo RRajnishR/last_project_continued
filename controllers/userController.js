@@ -176,6 +176,7 @@ router.get('/starttest/:langname', (req, res) => {
         title: "Step 2 - Test Inititation",
         description : "This page will help the user in starting his test",
         keywords: "Choose language level",
+        error: req.flash('errorMessage'),
         lang
     });
 });
@@ -183,12 +184,41 @@ router.get('/starttest/:langname', (req, res) => {
 router.get('/starttest/:langname/level/:langlevel', (req, res) => {
     //Randomly select 2 paragraphs from reading section
     //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
-    const docs = readingSectionDB.aggregate([
+
+    const langname = req.params.langname;
+    const level = req.params.langlevel;
+    var query;
+    if(level == "na") {
+        query = {
+            language : langname
+        };
+    } else {
+        query = {
+            language : langname, 
+            lang_level : level
+        };
+    }
+
+    var user_query;
+    readingSectionDB.aggregate([
+        {$match : query},
         {$sample : {size : 2}}
-    ], (err, docs) => {
-        docs.forEach(element => {
-            console.log(element._id);
-        });
+    ],  (err, data) => {
+        if(data.length > 2) {
+            req.flash('errorMessage', 'Sorry, Some problem occured!');
+            return res.redirect('user/starttest/'+langname)
+        }
+        if(data[0]._id == data[1]._id){
+            //refresh, in case returned docs are similar 
+            return res.redirect('user/starttest/'+langname+'/level/'+level);
+        }
+        //Query for inserting into userresponse database
+        user_query = {
+            user_id  : req.session.userid,
+            language : langname,
+            lang_level : level,
+            
+        }
     });
 })
 
