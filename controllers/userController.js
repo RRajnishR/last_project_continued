@@ -213,12 +213,7 @@ router.get('/starttest/:langname/level/:langlevel', (req, res) => {
             return res.redirect('user/starttest/'+langname+'/level/'+level);
         }
         //Query for inserting into userresponse database
-        user_query = {
-            user_id  : req.session.userid,
-            language : langname,
-            lang_level : level,
-            
-        }
+        
     });
 })
 
