@@ -133,7 +133,7 @@
         // Adding pramukhime plugin
         extraPlugins: 'pramukhime',
         pramukhime_options: {
-            selected_value: 'pramukhindic:{{language}}', // To know more, go into ckeditor/samples dir. open example html to understand
+            selected_value: 'pramukhindic:{{language.toLowerCase()}}', // To know more, go into ckeditor/samples dir. open example html to understand
         },
     };
     CKEDITOR.replace('directed_interview_ques', ckeditor4_config);
