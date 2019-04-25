@@ -31,7 +31,7 @@ app.use(express.urlencoded({extended:false}));
 //Express file upload
 app.use(fileUpload());
 app.use(expressEdge);
-app.set("views", path.join(__dirname, 'views'));
+app.set("views", `${__dirname}/views`);
 
 
 app.use(
