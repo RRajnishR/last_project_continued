@@ -181,7 +181,7 @@ router.get('/starttest/:langname', (req, res) => {
     });
 });
 
-router.get('/starttest/:langname/level/:langlevel', (req, res) => {
+router.get('/starttest/:langname/level/:langlevel', async(req, res) => {
     //Randomly select 2 paragraphs from reading section
     //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
 
@@ -199,22 +199,35 @@ router.get('/starttest/:langname/level/:langlevel', (req, res) => {
         };
     }
 
-    var user_query;
-    readingSectionDB.aggregate([
+    let reading_section_ques_1 = await readingSectionDB.aggregate([
         {$match : query},
-        {$sample : {size : 2}}
+        {$sample : {size : 1}}
     ],  (err, data) => {
-        if(data.length > 2) {
-            req.flash('errorMessage', 'Sorry, Some problem occured!');
-            return res.redirect('user/starttest/'+langname)
-        }
-        if(data[0]._id == data[1]._id){
-            //refresh, in case returned docs are similar 
-            return res.redirect('user/starttest/'+langname+'/level/'+level);
-        }
-        //Query for inserting into userresponse database
-        
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
     });
+    
+    let reading_section_ques_2 = await readingSectionDB.aggregate([
+        {$match : 
+            {
+                $and : [
+                    query,
+                    { _id: { $nin: [reading_section_ques_1._id] } }
+                ]
+            }
+        },
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+    
 })
 
 module.exports = router;

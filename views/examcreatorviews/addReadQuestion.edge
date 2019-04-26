@@ -29,7 +29,7 @@
                   <form id="thisform" action="/exam/readingSection/insertques" method="POST" autocomplete="off">
                         <div class="form-group">
                             <label for="Question">Question</label>
-                            <textarea class="form-control" name="question" id="question" cols="30" rows="10" placeholder="Your Question Here" required></textarea>
+                            <textarea class="form-control kanni-enabled" name="question" id="question" cols="30" rows="10" placeholder="Your Question Here" required></textarea>
                             <input type="hidden" name="paragraphid" value="{{para._id}}">
                         </div>
                         <div class="form-group">
@@ -44,19 +44,19 @@
                         <div class="form-row" id="ifoptions">
                             <div class="form-group col-md-6">
                                 <label>Option 1</label>
-                                <input type="text" class="form-control" id="option1" name="option1" placeholder="Option 1">
+                                <input type="text" class="form-control kanni-enabled" id="option1" name="option1" placeholder="Option 1">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Option 2</label>
-                                <input type="text" class="form-control" id="option2" name="option2" placeholder="Option 2">
+                                <input type="text" class="form-control kanni-enabled" id="option2" name="option2" placeholder="Option 2">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Option 3</label>
-                                <input type="text" class="form-control" id="option3" name="option3" placeholder="Option 3">
+                                <input type="text" class="form-control kanni-enabled" id="option3" name="option3" placeholder="Option 3">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Option 4</label>
-                                <input type="text" class="form-control" id="option4" name="option4" placeholder="Option 4">
+                                <input type="text" class="form-control kanni-enabled" id="option4" name="option4" placeholder="Option 4">
                             </div>
                             <div class="form-group col-md-12">
                                 <input type="number" class="form-control" id="correct_index" name="correct_index" placeholder="Correct Option: (1 or 2 or 3 or 4)?" min="1" max="4">
@@ -88,7 +88,7 @@
                     </div>
                 @endeach
                 @else
-                  
+                  <h6>All the Questions related to paragraph will appear here. Start adding them.</h6>
                 @endif
             </div>
         </div>
@@ -136,10 +136,14 @@
             document.getElementById('thisform').submit();
         }
     </script>
-    <script type="text/javascript" src="/ckeditor/plugins/pramukhime/js/pramukhime.js"></script>
-    <script type="text/javascript" src="/ckeditor/plugins/pramukhime/js/pramukhindic.js"></script>
-    <script language="javascript" type="text/javascript">
-        pramukhIME.addKeyboard(PramukhIndic,"{{expert_in_lang}}"); 
-        pramukhIME.enable();
-    </script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/kanni.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/bengali.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/gujarati.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/hindi.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/kannada.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/malayalam.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/oriya.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/punjabi.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/tamil.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/telugu.js"></script>
 @endsection

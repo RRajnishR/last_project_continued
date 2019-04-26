@@ -23,7 +23,16 @@
                        <a href="/user/starttest/{{lang}}/level/B1" class="btn btn-xs border border-warning text-info">B1 - Advance</a>
                        <a href="/user/starttest/{{lang}}/level/B2" class="btn btn-xs border border-warning text-info">B2 - Expert</a>
                        <hr>
-                       Or : <a href="/user/starttest/{{lang}}/level/na" class="btn btn-xs border border-warning text-info">Start Exam without specifying any level</a>
+                       Or : <a href="/user/starttest/{{lang}}/level/na" class="btn btn-xs border border-warning text-info">Start a General Test</a>
+
+
+
+                       @if(error!='')
+                            <div class="myAlert-top alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fas fa-check-circle"></i></strong> {{ error }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
