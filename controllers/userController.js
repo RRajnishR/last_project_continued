@@ -4,6 +4,9 @@ var router = express.Router();
 const User = require('../models/users.model'); 
 const languagesDB = require('../models/language.model');
 const readingSectionDB = require('../models/readingSection.model');
+const listeningSectionDB = require('../models/listeningSection.model');
+const writingSectionDB = require('../models/writingSection.model');
+const speakingSectionDB = require('../models/speakingSection.model');
 
 router.get('/login', (req, res) => {
     res.render("userviews/loginUser",{
@@ -215,7 +218,7 @@ router.get('/starttest/:langname/level/:langlevel', async(req, res) => {
             {
                 $and : [
                     query,
-                    { _id: { $nin: [reading_section_ques_1._id] } }
+                    { _id: { $nin: [reading_section_ques_1[0]._id] } }
                 ]
             }
         },
@@ -227,6 +230,94 @@ router.get('/starttest/:langname/level/:langlevel', async(req, res) => {
         } 
         return data[0];
     });
+    
+    let listening_quest_1 = await listeningSectionDB.aggregate([
+        {$match : query},
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+    
+    let listening_quest_2 = await listeningSectionDB.aggregate([
+        {$match : 
+            {
+                $and : [
+                    query,
+                    { _id: { $nin: [listening_quest_1[0]._id] } }
+                ]
+            }
+        },
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+
+    let listening_quest_3 = await listeningSectionDB.aggregate([
+        {$match : 
+            {
+                $and : [
+                    query,
+                    { _id: { $nin: [listening_quest_1[0]._id, listening_quest_2[0]._id] } }
+                ]
+            }
+        },
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+    
+    let writing_ques_1 = await writingSectionDB.aggregate([
+        {$match : query},
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+
+    let writing_ques_2 = await writingSectionDB.aggregate([
+        {$match : 
+            {
+                $and : [
+                    query,
+                    { _id: { $nin: [listening_quest_1[0]._id] } }
+                ]
+            }
+        },
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+
+    let speaking_ques_1 = await speakingSectionDB.aggregate([
+        {$match : query},
+        {$sample : {size : 1}}
+    ],  (err, data) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wront while retrieving Questions');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        return data[0];
+    });
+
     
 })
 
