@@ -40,5 +40,40 @@ const responseSchema = new mongoose.Schema({
         question_id : String,
         response : String
     }],
+    listening_quest_1 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'ListeningSectionSchema',
+        required : true
+    },
+    listening_response_1 : {
+        question_id : String,
+        response : String
+    },
+    listening_quest_2 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'ListeningSectionSchema',
+        required : true
+    },
+    listening_response_2 : {
+        question_id : String,
+        response : String
+    },
+    listening_quest_3 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'ListeningSectionSchema',
+        required : true
+    },
+    listening_response_3 : {
+        question_id : String,
+        response : String
+    },
+    writing_ques_1 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'ListeningSectionSchema',
+        required : true
+    },
+    writing_response_1 : {
+
+    },
     
 });
