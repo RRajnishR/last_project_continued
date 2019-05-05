@@ -7,10 +7,13 @@ const readingSectionDB = require('../models/readingSection.model');
 const listeningSectionDB = require('../models/listeningSection.model');
 const writingSectionDB = require('../models/writingSection.model');
 const speakingSectionDB = require('../models/speakingSection.model');
+const isLogin = require('../middlewares/userIsLogin.middleware');
+const isAuthenticated = require('../middlewares/userIsAuthenticated.middleware');
 
-router.get('/login', (req, res) => {
+router.get('/login', isLogin, (req, res) => {
     res.render("userviews/loginUser",{
         success: req.flash('successMessage'),
+        error : req.flash('errorMessage'),
         title: "Users Login Page",
         description : "This page will log-in the user",
         keywords: "Login into language test portal"
@@ -41,7 +44,7 @@ router.post('/login', (req, res) => {
       })
 });
 
-router.get('/forgotpassword', (req, res) => {
+router.get('/forgotpassword', isLogin, (req, res) => {
     res.render("userviews/forgotPass",{
         success: req.flash('successMessage'),
         title: "Users Login Page",
@@ -50,7 +53,7 @@ router.get('/forgotpassword', (req, res) => {
     });
 });
 
-router.get('/register', (req, res) => {
+router.get('/register', isLogin, (req, res) => {
     res.render("userviews/registerUser",{
         title: "User Registeration Page",
         description : "This page will help you in creating your account",
@@ -137,7 +140,7 @@ router.post('/register', (req, res) => {
 .
 */
 
-router.get('/userpage', (req, res) => {
+router.get('/userpage', isAuthenticated, (req, res) => {
     res.render('userviews/userpage', {
         userid : req.session.userid,
         fullname : req.session.fullname,
@@ -155,7 +158,7 @@ router.post('/userpage', (req, res) => {
     res.redirect('/user/userpage');
 });
 
-router.get('/starttest', async(req, res) => {
+router.get('/starttest', isAuthenticated, async(req, res) => {
     const lang = await languagesDB.find({});
     res.render('userviews/starttest', {
         userid : req.session.userid,
@@ -169,7 +172,7 @@ router.get('/starttest', async(req, res) => {
     });
 });
 
-router.get('/starttest/:langname', (req, res) => {
+router.get('/starttest/:langname', isAuthenticated, (req, res) => {
     const lang = req.params.langname;
     res.render('userviews/chooselevel', {
         userid : req.session.userid,
@@ -184,7 +187,7 @@ router.get('/starttest/:langname', (req, res) => {
     });
 });
 
-router.get('/starttest/:langname/level/:langlevel', async(req, res) => {
+router.get('/starttest/:langname/level/:langlevel', isAuthenticated, async(req, res) => {
     //Randomly select 2 paragraphs from reading section
     //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
 
