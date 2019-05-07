@@ -7,10 +7,12 @@ const readingSectionDB = require('../models/readingSection.model');
 const listeningSectionDB = require('../models/listeningSection.model');
 const writingSectionDB = require('../models/writingSection.model');
 const speakingSectionDB = require('../models/speakingSection.model');
+const emailTransporter = require('../middlewares/sendmail.middleware');
 
 router.get('/login', (req, res) => {
     res.render("userviews/loginUser",{
         success: req.flash('successMessage'),
+        error : req.flash('errorMessage'),
         title: "Users Login Page",
         description : "This page will log-in the user",
         keywords: "Login into language test portal"
@@ -114,15 +116,60 @@ router.post('/register', (req, res) => {
                             email
                         });
                     }
-                    req.flash('successMessage', "Awesome, Your account has been created!, Verify your email and Login now.");
-                    //* Imp */send mail here and redirect to login
-                    res.redirect('login');
+                    let html = '<!DOCTYPE html><html><head><title>TILPT EMAIL</title><link href="https://fonts.googleapis.com/css?family=Gugi|Roboto+Condensed" rel="stylesheet"><style type="text/css">body{margin:0px;padding:0px;background-color:}.container{margin:3em;padding:5em}h1{font-family:"Gugi",cursive;margin-bottom:-1.15em}.card-holder{margin:2em 0}.card{font-family:"Roboto Condensed",sans-serif;font-size:3em;font-weight:800;height:4em;width:64em;padding:0.5em 1em;border-radius:0.25em;display:table-cell;vertical-align:middle;letter-spacing:-2px;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)}.card .subtle{color:#000;font-size:0.5em;font-weight:400;letter-spacing:-1px}.card i{font-size:3em}.bg-gold{background:-webkit-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-o-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-moz-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);box-sizing:border-box}.bg-gold:after{content:"";display:table;clear:both}p{font-size:0.6em;letter-spacing:2px}a.btn{border:1px solid black;color:black}.column{float:left;width:50%}.textpart{font-size:0.65em}span.small{font-size:0.6em;color:red;letter-spacing:1px !important}</style></head><body><div class="container"><h1> TILPT.COM</h1><div class="card-holder"><div class="card bg-gold"><div class="column textpart"> Hi, '+ user.fullname +'.<br/><br/> Welcome to tilpt.com,<br/> Your account has been created. To verify your email, Please <a href="#">Click Here</a>.<br/> <span class="small">Else, copy the following link and paste it into your browser. <a href="#">#</a> </span> <br/> <br/> Thanks and Regards,<br/> TILPT Team.</div><div class="column"> <img align="right" src="http://www.langjobs.com/assets/india-min.png" alt="india"></div></div></div></div></body></html>';
+                    
+                    var mailOptions = {
+                        from: process.env.EMAIL,
+                        to: user.email,
+                        subject: 'TILPT Account Activation ',
+                        html : html
+                      };
+                      
+                      emailTransporter.sendMail(mailOptions, function(error, info){
+                        if (error) {
+                            req.flash('errorMessage', "Something went wrong, please try again later");
+                            return res.redirect('/user/register');
+                        } else {
+                            //console.log(info);
+                            req.flash('successMessage', "Awesome, Your account has been created!, Verify your email and Login now.");
+                            res.redirect('/user/login');
+                        }
+                      });
                 });
             }
         });
     }    
 });
 
+router.get('/verify/:id/:secret', (req, res) => {
+
+    const userid = req.params.id;
+    const secret = req.params.secret;
+
+    User.findById(userid, (err, user) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry something went wrong. Try again later!');
+        } 
+        if(user.mail_verified){
+            req.flash('errorMessage', 'Mail already Verified');
+        } else {
+            if(secret == user.secret_token){
+                user.mail_verified = true;
+                user.save(err => {
+                    if(err){
+                        req.flash('errorMessage', 'Sorry something went wrong. Try again later!');
+                    } else {
+                        req.flash('successMessage', 'Awesome, account verified. Now Login!');
+                    }
+                })
+            } else {
+                req.flash('errorMessage', 'Sorry, Problem with link, contact admin!');
+            }
+        }
+        res.redirect('/user/login');
+    })
+
+});
 
 /*
 .

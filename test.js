@@ -1,10 +1,18 @@
-const mongoose = require('mongoose');
-require('./models/db');
-const Language = require('./models/language.model');
+require('dotenv').config();
+const emailTransporter = require('./middlewares/sendmail.middleware');
 
-Language.create({
-    lang_name : "Hindi",
-    lang_code : "Hi"
-}, (error, lang)=>{
-    console.log(error, lang);
-})
+var mailOptions = {
+    from: process.env.EMAIL,
+    to: 'moodi.rajnish@gmail.com',
+    subject: 'Node mailer Test 1',
+    text: `Hahahahahaha
+            It was successful!`
+  };
+  
+  emailTransporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
