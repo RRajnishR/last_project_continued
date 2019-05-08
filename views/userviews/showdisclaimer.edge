@@ -1,0 +1,138 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<style>
+    .navbar, .footer{
+        display: none;
+    }
+    .app{
+        padding: 0 0;
+    }
+    .instruction{
+        text-align: justify;
+    }
+    video{
+        -webkit-box-shadow: 4px 6px 5px 0px rgba(184,167,184,1);
+        -moz-box-shadow: 4px 6px 5px 0px rgba(184,167,184,1);
+        box-shadow: 4px 6px 5px 0px rgba(184,167,184,1);
+        border: 1px dotted yellow;
+        border-radius: 20%;
+        width:100px;
+        height:80px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="">
+                <h3 class="app__main__title"><i class="fas fa-language"></i> Please read the instructions and guide before starting the exam. </h3>
+                <hr>
+                <p class="instruction">
+                    Attention! You are going to start the indian language interpretation exam and, before we go any further, We want to inform you that
+                    we will be using your <b>webcam and mic</b> for the examination. We will monitor and study the video as a proof that you have given the
+                    examination without cheating or using illegal means. We will also use the same to record your answers for some part of your exam. 
+                    Hence, <b>*Allow the site to access your webcam and microphone*</b>. Without it, you won't be able to proceed to start the exam.
+                    Following table contains the structure of your examination. Please read it carefully before starting the exam. As soon as you allow access, 
+                    Your Video will appear here. Check Your video and audio before starting the exam.
+                </p>   
+                <video>Video will appear here.</video>
+                <div class="container-fluid table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nature of Test</th>
+                                <th>Duration</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                   <b>Oral Comprehension of Language</b><br/>
+                                   Answer the questions based on oral conversation. You would
+                                   watch/listen a video/audio before answering the question.
+                                </td>
+                                <td>25 Minutes</td>
+                                <td>25 points</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <b>Understanding of Language Writings</b><br/>
+                                   Response to comprehension questionnaires on written texts: <br/>
+                                   - Identify useful information for a given task. <br/>
+                                   - Analyze the content of a text of general interest.
+                                </td>
+                                <td>35 Minutes</td>
+                                <td>25 points</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Language Written Production</b><br/>
+                                    Epression of personal attitude on a general theme <br/>
+                                    (essay, mail, article...).
+                                </td>
+                                <td>45 Minutes</td>
+                                <td>25 points</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Language Oral Production</b><br/>
+                                    Three-part test: <br/>
+                                    - Structured Interview; <br/>
+                                    - Interacting Excercise; <br/>
+                                    - expression of a point of a view from a document / picture trigger.
+                                </td>
+                                <td>15 Minutes (5 minutes each)</td>
+                                <td>25 points</td>
+                            </tr>
+                        <tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th>2 hours</th>
+                                <th>100 points</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <a href="" class="btn btn-info"><i class="fas fa-check"></i> I have read the instuction. Start Exam Now. <i class="fas fa-play-circle"></i></a> <a href="" class="btn btn-danger"> <i class="far fa-times-circle"></i> Cancel, take me back.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+    <script>
+        function isMobileDevice() {
+            if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+                alert("It seems that you're trying to access this site via a mobile device. Please try start the exam with a laptop/pc with a working webcam and Mic.");
+
+            } 
+        }
+        isMobileDevice();
+        window.onload = function() {
+            //add constraints object
+            var constraints = { audio: true,
+                                video: true};
+            navigator.getMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+                                navigator.msGetUserMedia);
+            //call getUserMedia, then the magic
+            navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
+                var video = document.querySelector('video');
+                video.srcObject = mediaStream;
+                video.play();
+            }).catch(function(err){
+                alert('Error! Media Devices were not found/allowed.');
+                //console.log("yikes, and err!" + err.message);
+            });
+        }
+    </script>
+@endsection

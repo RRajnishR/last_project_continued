@@ -28,6 +28,10 @@ const examinerSchema = new mongoose.Schema({
     expert_in_lang : {
         type : String
     },
+    mail_verified:{
+        type : Boolean,
+        default : false
+    },
     secret_token : {
         type : String
     },

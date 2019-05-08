@@ -118,7 +118,8 @@ router.post('/register', (req, res) => {
                             email
                         });
                     }
-                    let html = '<!DOCTYPE html><html><head><title>TILPT EMAIL</title><link href="https://fonts.googleapis.com/css?family=Gugi|Roboto+Condensed" rel="stylesheet"><style type="text/css">body{margin:0px;padding:0px;background-color:}.container{margin:3em;padding:5em}h1{font-family:"Gugi",cursive;margin-bottom:-1.15em}.card-holder{margin:2em 0}.card{font-family:"Roboto Condensed",sans-serif;font-size:3em;font-weight:800;height:4em;width:64em;padding:0.5em 1em;border-radius:0.25em;display:table-cell;vertical-align:middle;letter-spacing:-2px;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)}.card .subtle{color:#000;font-size:0.5em;font-weight:400;letter-spacing:-1px}.card i{font-size:3em}.bg-gold{background:-webkit-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-o-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-moz-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);box-sizing:border-box}.bg-gold:after{content:"";display:table;clear:both}p{font-size:0.6em;letter-spacing:2px}a.btn{border:1px solid black;color:black}.column{float:left;width:50%}.textpart{font-size:0.65em}span.small{font-size:0.6em;color:red;letter-spacing:1px !important}</style></head><body><div class="container"><h1> TILPT.COM</h1><div class="card-holder"><div class="card bg-gold"><div class="column textpart"> Hi, '+ user.fullname +'.<br/><br/> Welcome to tilpt.com,<br/> Your account has been created. To verify your email, Please <a href="#">Click Here</a>.<br/> <span class="small">Else, copy the following link and paste it into your browser. <a href="#">#</a> </span> <br/> <br/> Thanks and Regards,<br/> TILPT Team.</div><div class="column"> <img align="right" src="http://www.langjobs.com/assets/india-min.png" alt="india"></div></div></div></div></body></html>';
+                    const url = req.protocol + "://" + req.headers.host;
+                    let html = '<!DOCTYPE html><html><head><title>TILPT EMAIL</title><link href="https://fonts.googleapis.com/css?family=Gugi|Roboto+Condensed" rel="stylesheet"><style type="text/css">body{margin:0px;padding:0px;background-color:}.container{margin:3em;padding:5em}h1{font-family:"Gugi",cursive;margin-bottom:-1.15em}.card-holder{margin:2em 0}.card{font-family:"Roboto Condensed",sans-serif;font-size:3em;font-weight:800;height:4em;width:64em;padding:0.5em 1em;border-radius:0.25em;display:table-cell;vertical-align:middle;letter-spacing:-2px;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)}.card .subtle{color:#000;font-size:0.5em;font-weight:400;letter-spacing:-1px}.card i{font-size:3em}.bg-gold{background:-webkit-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-o-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:-moz-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);background:linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);box-sizing:border-box}.bg-gold:after{content:"";display:table;clear:both}p{font-size:0.6em;letter-spacing:2px}a.btn{border:1px solid black;color:black}.column{float:left;width:50%}.textpart{font-size:0.65em}span.small{font-size:0.6em;color:red;letter-spacing:1px !important}</style></head><body><div class="container"><h1> TILPT.COM</h1><div class="card-holder"><div class="card bg-gold"><div class="column textpart"> Hi, '+ user.fullname +'.<br/><br/> Welcome to tilpt.com,<br/> Your account has been created. To verify your email, Please <a href="'+url+'/user/verify/'+user._id+'/'+user.secret_token+'">Click Here</a>.<br/> <span class="small">Else, copy the following link and paste it into your browser. <a href="'+url+'/user/verify/'+user._id+'/'+user.secret_token+'">'+url+'/user/verify/'+user._id+'/'+user.secret_token+'</a> </span> <br/> <br/> Thanks and Regards,<br/> TILPT Team.</div><div class="column"> <img align="right" src="http://www.langjobs.com/assets/india-min.png" alt="india"></div></div></div></div></body></html>';
                     
                     var mailOptions = {
                         from: process.env.EMAIL,
@@ -367,6 +368,15 @@ router.get('/starttest/:langname/level/:langlevel', isAuthenticated, async(req, 
         return data[0];
     });
 
+    res.render("userviews/showdisclaimer",{
+        title: "Exam Disclaimer Page",
+        description : "This page will give disclaimer and information about the exam",
+        keywords: "Exam Notification, Disclaimer etc.",
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email
+    });    
     
 })
 
