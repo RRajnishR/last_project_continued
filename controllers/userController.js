@@ -276,7 +276,7 @@ router.get('/starttest/:langname', isAuthenticated, (req, res) => {
     });
 });
 
-router.get('/starttest/:langname/level/:langlevel', isAuthenticated, async(req, res) => {
+router.get('/starttest/:langname/level/:langlevel',  async(req, res) => {
     //Randomly select 2 paragraphs from reading section
     //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
 
