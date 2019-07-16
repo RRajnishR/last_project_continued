@@ -40,7 +40,8 @@ app.use(
         resave: false,
         saveUninitialized: true,
         store: new mongoStore({
-            mongooseConnection: mongoose.connection
+            mongooseConnection: mongoose.connection,
+            clear_interval: 3600
         })
     })
 );

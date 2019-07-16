@@ -12,10 +12,10 @@
 				<div class="auth__auth">
 					<h1 class="auth__title">Forgot your password?</h1>
 					<p>Enter your registered email. We'll send you a recovery email.</p>
-					<form method='post' action="/user/login/" autocomplete="off" role="presentation" class="form">
+					<form method='post' action="/user/forgotpassword" autocomplete="off" role="presentation" class="form">
 						<label>Email</label>
-						<input type="text" name="email" id='email' placeholder="you@example.com">
-						<button type='submit' class="button button__accent">Log in</button>
+						<input type="email" name="email" id='email' placeholder="you@example.com" required>
+						<button type='submit' class="button button__accent">Save Me</button>
 						<a href="/user/login/"><h6 class="left-align" >Sign In</h6></a>
 					</form>
 				</div>

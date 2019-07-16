@@ -12,19 +12,19 @@ const responseSchema = new mongoose.Schema({
     }, 
     lang_level : {
         type : String,
-        enum : ['A1', 'A2', 'B1', 'B2'],
-        default : 'A1'
+        enum : ['A1', 'A2', 'B1', 'B2', 'GEN'],
+        default : 'GEN'
     },
     exam_date : {
         type: Date,
         default: new Date()
     },
-    rs_start_time : {
-        type: Date
+    exam_start_time : {
+        
     },
     reading_section_ques_1 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'readingSectionParagraphs',
+        ref : 'readingsectionparagraphs',
         required : true
     },
     read_responses_1 : [{
@@ -33,7 +33,7 @@ const responseSchema = new mongoose.Schema({
     }],
     reading_section_ques_2 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'readingSectionParagraphs',
+        ref : 'readingsectionparagraphs',
         required : true
     },
     read_responses_2 : [{
@@ -42,7 +42,7 @@ const responseSchema = new mongoose.Schema({
     }],
     listening_quest_1 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'ListeningSectionSchema',
+        ref : 'listeningschemas',
         required : true
     },
     listening_response_1 : {
@@ -51,7 +51,7 @@ const responseSchema = new mongoose.Schema({
     },
     listening_quest_2 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'ListeningSectionSchema',
+        ref : 'listeningschemas',
         required : true
     },
     listening_response_2 : {
@@ -60,7 +60,7 @@ const responseSchema = new mongoose.Schema({
     },
     listening_quest_3 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'ListeningSectionSchema',
+        ref : 'listeningschemas',
         required : true
     },
     listening_response_3 : {
@@ -69,11 +69,19 @@ const responseSchema = new mongoose.Schema({
     },
     writing_ques_1 : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'ListeningSectionSchema',
+        ref : 'writingschemas',
         required : true
     },
     writing_response_1 : {
-
+        type : String
     },
-    
+    writing_ques_2 : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'writingschemas',
+        required : true
+    },
+    writing_response_2 : {
+        type : String
+    },
+
 });

@@ -48,11 +48,53 @@ router.post('/login', (req, res) => {
 router.get('/forgotpassword', isLogin, (req, res) => {
     res.render("userviews/forgotPass",{
         success: req.flash('successMessage'),
+        error : req.flash('errorMessage'),
         title: "Users Login Page",
         description : "This page will log-in the user",
         keywords: "Login into language test portal"
     });
 });
+
+router.post('/forgotpassword', (req, res) =>{
+    const { email } = req.body;
+    User.findOne({ email }, (err, user) => {
+        if(user){
+            const url = req.protocol + "://" + req.headers.host;
+            let expiretime = Date.now()+7200000;
+            let total_url = url+"/user/forgotpassword/"+user.id+"/"+user.secret_token+"/"+expiretime;
+            let html = '<!DOCTYPE html><html><head> <title>TILPT EMAIL</title> <link href="https://fonts.googleapis.com/css?family=Gugi|Roboto+Condensed" rel="stylesheet"> <style type="text/css"> body{margin: 0px; padding: 0px; background-color:}.container{margin: 3em; padding: 5em}h1{font-family: "Gugi", cursive; margin-bottom: -1.15em}.card-holder{margin: 2em 0}.card{font-family: "Roboto Condensed", sans-serif; font-size: 3em; font-weight: 800; height: 4em; width: 64em; padding: 0.5em 1em; border-radius: 0.25em; display: table-cell; vertical-align: middle; letter-spacing: -2px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)}.card .subtle{color: #000; font-size: 0.5em; font-weight: 400; letter-spacing: -1px}.card i{font-size: 3em}.bg-gold{background: -webkit-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%); background: -o-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%); background: -moz-linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%); background: linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%); box-sizing: border-box}.bg-gold:after{content: ""; display: table; clear: both}p{font-size: 0.6em; letter-spacing: 2px}a.btn{border: 1px solid black; color: black}.column{float: left; width: 50%}.textpart{font-size: 0.65em}span.small{font-size: 0.6em; color: red; letter-spacing: 1px !important}</style></head><body> <div class="container"> <h1>Forgot Password | TILPT.COM</h1> <div class="card-holder"> <div class="card bg-gold"> <div class="column textpart"> Hi, '+ user.fullname +'. <br/> <br/> Hi, we heard you forgot your password, <br/> Use following link to reset your password. This link will expire after 2 hours. <br/> <br/> <span class="small"> <a href="'+total_url+'">'+total_url+'</a> <br/> copy and paste the link in your address bar, incase you are unable to click on it. </span> <br/> <br/> If you have not requested for change in your password, drop us a mail at: theilpt@gmail.com <br/> Thanks and Regards, <br/> TILPT Team.</div><div class="column"> <img align="right" src="http://www.langjobs.com/assets/india-min.png" alt="india"></div></div></div></div></body></html>';
+            var mailOptions = {
+                from: process.env.EMAIL,
+                to: user.email,
+                subject: 'TILPT Password Recovery',
+                html : html
+              };
+              
+              emailTransporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    req.flash('errorMessage', "Sorry, Can not send email right now, please come back later.");
+                    return res.redirect('/user/forgotpassword');
+                } else {
+                    req.flash('successMessage', "An email with link to reset your password has been sent to your mail. It will be valid for 2 hours only.");
+                    res.redirect('/user/forgotpassword');
+                }
+              });
+        } else {
+            req.flash('errorMessage', "uh, oh. It seems like this email is not registered with us. Try another.");
+            res.redirect('/user/forgotpassword');
+        }
+        if(err){
+            req.flash('errorMessage', "Something went wrong, Please come back later!");
+            res.redirect('/user/forgotpassword'); 
+        }
+    })
+});
+
+router.get('/forgotpassword/:id/:token/:time', (req, res) => {
+    const {id, token, time} = req.params;
+    res.send(id+" "+token+" "+time);
+});
+
 
 router.get('/register', isLogin, (req, res) => {
     res.render("userviews/registerUser",{
@@ -378,6 +420,14 @@ router.get('/starttest/:langname/level/:langlevel', isAuthenticated, async(req, 
         email : req.session.email
     });    
     
-})
+});
+
+router.get('/exam', (req, res) => {
+    res.render("userviews/exampage", {
+        title: "Exam Page",
+        description : "Exam has started",
+        keywords: "Exam, Language, Interpretation"
+    });
+});
 
 module.exports = router;

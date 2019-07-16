@@ -40,7 +40,9 @@
                     examination without cheating or using illegal means. We will also use the same to record your answers for some part of your exam. 
                     Hence, <b>*Allow the site to access your webcam and microphone*</b>. Without it, you won't be able to proceed to start the exam.
                     Following table contains the structure of your examination. Please read it carefully before starting the exam. As soon as you allow access, 
-                    Your Video will appear here. Check Your video and audio before starting the exam.
+                    Your Video will appear here. Check Your video and audio before starting the exam. (Remember, If your video and audio is not captured, 
+                    your exam will get cancelled by default.) <br/>
+                    <b>P.S: We advice you to use modern browsers like chrome or firefox.</b>
                 </p>   
                 <video>Video will appear here.</video>
                 <div class="container-fluid table-responsive">
@@ -101,7 +103,7 @@
                             </tr>
                         </tfoot>
                     </table>
-                    <a href="" class="btn btn-info"><i class="fas fa-check"></i> I have read the instuction. Start Exam Now. <i class="fas fa-play-circle"></i></a> <a href="" class="btn btn-danger"> <i class="far fa-times-circle"></i> Cancel, take me back.</a>
+                    <a href="/user/" class="btn btn-info"><i class="fas fa-check"></i> I have read the instuction. Start Exam Now. <i class="fas fa-play-circle"></i></a> <a href="" class="btn btn-danger"> <i class="far fa-times-circle"></i> Cancel, take me back.</a>
                 </div>
             </div>
         </div>
@@ -113,8 +115,8 @@
     <script>
         function isMobileDevice() {
             if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
-                alert("It seems that you're trying to access this site via a mobile device. Please try start the exam with a laptop/pc with a working webcam and Mic.");
-
+                alert("It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.");
+                document.body.innerHTML = "<h1>It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.</h1>";
             } 
         }
         isMobileDevice();
