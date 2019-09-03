@@ -6,33 +6,33 @@
         <li class="breadcrumb-item">
             <a href="#">Dashboard</a>
         </li>
-        <li class="breadcrumb-item active">Examiners</li>
+        <li class="breadcrumb-item active">Users</li>
     </ol>
 
     <!-- Icon Cards-->
     <div class="row">
         <div class="col-lg-12 table-responsive">
-            @if(examiners.length > 0)
+            @if(users.length > 0)
               <table class="table table-sm table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>email</th>
-                        <th>Expert In</th>
-                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Profile Status</th>
+                        <th>Email Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @each(examiner in examiners)
+                    @each(user in users)
                       <tr>
                           <td>{{($loop.index) + 1 }}</td>
-                          <td>{{examiner.fullname}}</td>
-                          <td>{{examiner.email}}</td>
-                          <td>{{examiner.expert_in_lang}}</td>
-                          <td>{{examiner.profile_status}}</td>
-                          <td><a class="btn btn-xs btn-info" href="#">more >> </a></td>
+                          <td>{{user.fullname}}</td>
+                          <td>{{user.email}}</td>
+                          <td>{{user.profile_status}}</td>
+                          <td>{{user.mail_verified}}</td>
+                          <td><a class="btn btn-xs btn-info" href="#">more</a></td>
                       </tr>
                     @endeach
                 </tbody>
