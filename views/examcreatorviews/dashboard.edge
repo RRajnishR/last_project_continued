@@ -1,5 +1,202 @@
 @layout('layouts.examiner_dashboard')
 
+@section('style')
+  <style>
+      .tile {
+        width:160px;
+        height:180px;
+        border-radius:4px;
+        box-shadow: 2px 2px 4px 0 rgba(0,0,0,0.15);
+        margin-top:20px;
+        margin-left:20px;
+        float:left;
+        }
+
+        .tile.wide {
+        width: 340px;
+        }
+
+        .tile .header {
+        height:120px;
+        background-color:#f4f4f4;
+        border-radius: 4px 4px 0 0;
+        color:white;
+        font-weight:300;
+        }
+
+        .tile.wide .header .left, .tile.wide .header .right {
+        width:160px;
+        float:left;
+        }
+
+        .tile .header .count {
+        font-size: 48px;
+        text-align:center;
+        padding:10px 0 0;
+        }
+
+        .tile .header .title {
+        font-size: 20px;
+        text-align:center;
+        }
+
+        .tile .body {
+        height:60px;
+        border-radius: 0 0 4px 4px;
+        color:#333333;
+        background-color:white;
+        }
+
+        .tile .body .title {
+            text-align:center;
+            font-size:20px;
+            padding-top:2%;
+        }
+
+        .tile.wide .body .title {
+        padding:4%;
+        }
+
+        .tile.job .header {
+        background: linear-gradient(to bottom right, #609931, #87bc27);
+        }
+
+        .tile.job  .body {
+        color: #609931;
+        }
+
+        .tile.resource .header {
+        background: linear-gradient(to bottom right, #ef7f00, #f7b200);
+        }
+
+        .tile.resource  .body {
+        color: #ef7f00;
+        }
+
+        .tile.quote .header {
+        background: linear-gradient(to bottom right, #1f6abb, #4f9cf2);
+        }
+
+        .tile.quote  .body {
+        color: #1f6abb;
+        }
+
+        .tile.invoice .header {
+        background: linear-gradient(to bottom right, #0aa361, #1adc88);
+        }
+
+        .tile.invoice  .body {
+        color: #0aa361;
+        }
+  </style>
+@endsection
+
 @section('body')
-  
+  <div class="container">
+      <div class="row">
+          <div class="col-md-1">&nbsp;</div>
+          <div class="col-md-2"> 
+            <div class="tile quote">
+                <div class="header">
+                    <div class="count">{{readsec.length + listensec.length + speaksec.length + writesec.length}}</div>
+                    <div class="title">Total Question(s)</div>
+                </div>
+                <div class="body">
+                    <div class="title">All Sections</div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-2"> 
+                <div class="tile quote">
+                    <div class="header">
+                        <div class="count">{{readsec.length}}</div>
+                        <div class="title">Question(s)</div>
+                    </div>
+                    <div class="body">
+                        <div class="title">Reading Section</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"> 
+                <div class="tile quote">
+                    <div class="header">
+                        <div class="count">{{listensec.length}}</div>
+                        <div class="title">Question(s)</div>
+                    </div>
+                    <div class="body">
+                        <div class="title">Listening Section</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"> 
+                <div class="tile quote">
+                    <div class="header">
+                        <div class="count">{{speaksec.length}}</div>
+                        <div class="title">Question(s)</div>
+                    </div>
+                    <div class="body">
+                        <div class="title">Speaking Section</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"> 
+                <div class="tile quote">
+                    <div class="header">
+                        <div class="count">{{writesec.length}}</div>
+                        <div class="title">Question(s)</div>
+                    </div>
+                    <div class="body">
+                        <div class="title">Writing Section</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"> &nbsp;</div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 chart-container"  style="position: relative; width:80vw" >
+                <canvas id="mybarChart"></canvas>
+            </div>
+        </div>
+  </div>
+@endsection
+
+@section('scripts')
+  <script>
+      $(document).ready(function() {
+        var f=document.getElementById("mybarChart");
+        var myChart = new Chart(f,
+            {
+                type:"bar",
+                data: {
+                    labels:["January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July"],
+                    datasets:[ {
+                        label: "Sample Data", backgroundColor: "#26B99A", data: [51, 30, 40, 28, 92, 50, 45]
+                    }
+                    ,
+                    {
+                        label: "Sample Data 2", backgroundColor: "#03586A", data: [41, 56, 25, 48, 72, 34, 12]
+                    }
+                    ]
+                }
+                ,
+                options: {
+                    scales: {
+                        yAxes:[ {
+                            ticks: {
+                                beginAtZero: !0
+                            }
+                        }
+                        ]
+                    }
+                }
+            });
+      });
+  </script>
 @endsection

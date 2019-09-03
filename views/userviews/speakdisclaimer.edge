@@ -1,0 +1,81 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<style>
+    .navbar, .footer{
+        display: none;
+    }
+    .app{
+        padding: 0 0;
+    }
+    .instruction{
+        text-align: justify;
+    }
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+    h1{
+        text-align: center;
+    }
+</style>
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="">
+                <h3 class="app__main__title"><i class="fas fa-language"></i> Part IV: Speaking Section - Hindi oral production </h3>
+                <hr>
+                <div class="container-fluid table-responsive">
+                    <p>The	test takes place in	three parts	that follow	one	another. It	lasts between 10 and 15	minutes.</p>
+                    <ul>
+                        <li>1. Directed interview (2 to	3 minutes)<br/>
+                            You	talk about yourself, your activities, your	interests. You talk	about your past, your present and your	
+                            projects. The test is conducted	in the manner of an	interview, with	a question (examples: Hello ... 
+                            Can	you	introduce yourself,	tell me about you, your	family...).</li>
+                        <li>2. Exercise in interaction	(3 to 4 minutes) <br/>
+                            Questions presented to you will be of interaction type, like you're talking with someone.
+                        </li>
+                        <li>3. Expression of a point of view (5 to 7 minutes)<br/>
+                            You'll be given two topics or pictures, you have to select any one of them and present your opinion 
+                            in form of personal presentation.
+                        </li>
+                        <li>You'll have to record your answers via your webcam and Mic, We recommend speaking loudly and looking directly into camera while recording the answers. 
+                        </li>
+                        <li>Please read the questions carefully and try to answer in hindi as clearly as possible</li>
+                        <li>Total Marks for this section: 25 Marks</li>
+                        <li>Time to complete this section : 20 Minutes (5 min to read the questions and prepare + 15 min for exam)</li>
+                        <li>Click on <button disabled="disabled" class="class=" btn btn-success btn-lg"">
+                                <i class="fas fa-save"></i> Finish    
+                        </button>, when you're done with answering all the questions. </li>
+                        <li>At the end of timer, your answers will be saved automatically and exam will be completed.</li>
+                    </ul> <br/>
+                    <h1><i class="fas fa-thumbs-up"></i> Best of Luck</h1>
+                    <br/>
+                    <small>*Note : Start your exam after carefully reading the instruction above.</small>
+                    <br/>
+                    <br/>
+                    <a class="btn btn-info" onclick="startexam()"><i class="fas fa-check"></i> I have read the instuction. Start Exam Now. <i class="fas fa-play-circle"></i></a> <a href="/user/exam/cancel/{{examid}}" class="btn btn-danger"> <i class="far fa-times-circle"></i> Cancel, take me back.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+    <script>
+        function isMobileDevice() {
+            if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+                alert("It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.");
+                document.body.innerHTML = "<h1>It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.</h1>";
+            } 
+        }
+        isMobileDevice();
+
+        function startexam(){
+            //adding 15 minutes extra and sending it as a parameter
+            let starttime = Date.now()+ (20*60*1000);
+            window.location = "/user/exam/speaking/start/{{examid}}/t/"+starttime;
+        }
+    </script>
+@endsection

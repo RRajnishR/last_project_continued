@@ -1,0 +1,71 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<style>
+    .navbar, .footer{
+        display: none;
+    }
+    .app{
+        padding: 0 0;
+    }
+    .instruction{
+        text-align: justify;
+    }
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+    h1{
+        text-align: center;
+    }
+</style>
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="">
+                <h3 class="app__main__title"><i class="fas fa-language"></i> Part II: Writing Section - Hindi Written Production </h3>
+                <hr>
+                <div class="container-fluid table-responsive">
+                    <ul>
+                        <li>You will be shown a Topic/Text/Question. You'll have to write up a essay/article/mail, depending upon the text.</li>
+                        <li>As soon as you start typing, a dialog (in the left-bottom of your screen) will appear.
+                            You can select the Language in which you want to answer. eg: Choosing Hindi(Phonetic), will let you type in Phonetic english and
+                            hindi text will appear on screen. Otherwise you can answer use simple English to type Phonetic Hindi.
+                        </li>
+                        <li>Total Marks for this section: 25 Marks</li>
+                        <li>Time to complete this section : 45 Minutes</li>
+                        <li>Click on <button disabled="disabled" class="class=" btn btn-success btn-lg"">
+                                <i class="fas fa-save"></i> Submit <i class="fas fa-arrow-circle-right"></i>    
+                        </button>, only when you are satisfied with all your answers.</li>
+                        <li>At the end of timer, your answers will be saved automatically and you'll be redirected to next section of the exam.</li>
+                    </ul> <br/>
+                    <h1><i class="fas fa-thumbs-up"></i> Best of Luck</h1>
+                    <br/>
+                    <small>*Note : Start your exam after carefully reading the instruction above.</small>
+                    <br/>
+                    <br/>
+                    <a class="btn btn-info" onclick="startexam()"><i class="fas fa-check"></i> I understand, Let's Start. </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+    <script>
+        function isMobileDevice() {
+            if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+                alert("It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.");
+                document.body.innerHTML = "<h1>It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.</h1>";
+            } 
+        }
+        isMobileDevice();
+
+        function startexam(){
+            //adding 25 minutes extra and sending it as a parameter
+            let starttime = Date.now()+ (45*60*1000);
+            window.location = "/user/exam/writing/start/{{examid}}/t/"+starttime;
+        }
+    </script>
+@endsection

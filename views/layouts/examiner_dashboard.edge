@@ -16,6 +16,7 @@
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.css">
     <style>
         table {
             font-size: 0.9rem;
@@ -104,15 +105,18 @@
                 <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-tasks"></i>
-                    <span>Questions</span>
+                    <span>Exam Sections</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                    <h6 class="dropdown-header">Sections</h6>
                     <a class="dropdown-item" href="/exam/readingSection"><i class="fas fa-book-reader"></i> Reading Section</a>
                     <a class="dropdown-item" href="/exam/writingSection"><i class="fas fa-pen-alt"></i> Writing Section</a>
                     <a class="dropdown-item" href="/exam/listeningSection"><i class="fas fa-headphones-alt"></i> Listening Section</a>
                     <a class="dropdown-item" href="/exam/speakingSection"><i class="fas fa-microphone-alt"></i> Speaking Section</a>
                 </div>
+                <a class="nav-link" href="/exam/results">
+                    <i class="fas fa-poll"></i>
+                    <span>Completed Exams</span>
+                </a>
             </li>
         </ul>
 
@@ -190,6 +194,8 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 
     <script>
         $(document).ready(function(){

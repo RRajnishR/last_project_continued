@@ -1,0 +1,57 @@
+@layout('layouts.main_layout')
+
+@section('content')
+<div class="app">
+    <div class="container">
+        <div class="app__inner">
+            <div class="app__menu">
+                <ul class="vMenu">
+                    <li><a href="/user/userpage"><i class="far fa-user-circle"></i> Profile page</a></li>
+                    <li><a href="/user/starttest"><i class="fas fa-language"></i> Start Language Test</a></li>
+                    <li><a href="/user/results" class="vMenu--active"><i class="fas fa-award"></i> Results</a></li>
+                </ul>
+            </div>
+            <div class="app__main">
+                <div class="text-container">
+                    <h3 class="app__main__title"><i class="fas fa-award"></i> Results</h3>
+                    <hr>
+                    <div class="container-fluid table-responsive">
+                        @if(docs.length > 0)
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <th>#</th>
+                                <th>Language</th>
+                                <th>Level</th>
+                                <th>Date of Exam</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                          @each(doc in docs)
+                            <tr>
+                                <td> {{ ($loop.index + 1) }} </td>
+                                <td> {{doc.language}} </td>
+                                <td> {{doc.lang_level}} </td>
+                                <td> {{doc.exam_start_time.toDateString()}} </td>
+                                <td> {{doc.check_status ? "Declared" : "Awaiting"}} </td>
+                                <td> <button class="btn btn-xs btn-primary">See Result</button> </td>
+                            </tr>
+                          @endeach
+                        </table>
+                        @else
+                          <h4>Hey, Your results will appear here.</h4>
+                        @endif
+
+                        @if(error!='')
+                            <div class="myAlert-top alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong><i class="fas fa-check-circle"></i></strong> {{ error }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br><br><br><br>
+@endsection

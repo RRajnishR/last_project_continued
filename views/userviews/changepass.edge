@@ -1,0 +1,70 @@
+@layout('layouts.main_layout')
+
+@section('content')
+
+<div class="auth" style="padding-top:50px">
+		<div class="container">
+			<div class="auth__inner">
+				<div class="auth__media">
+                    {{--  This gif is downloaded from tumblr, https://ibmblr.tumblr.com/post/113463420579/password-fortifier-when-rhonda-childress-was  --}}
+					<img src="/images/setpass.gif" alt="Reset Password">
+				</div>
+				<div class="auth__auth">
+                    @if(flag == 1)
+                        <h1 class="auth__title">
+                            Sorry, something went wrong. Please try again.
+                        </h1>
+                    @elseif(flag == 2)
+                        <h1 class="auth__title">
+                            Sorry, This link has been expired. Please retry.
+                        </h1>
+                    @elseif(flag == 3)
+                        <h1 class="auth__title">
+                            Sorry, This link is incorrect. Please do not try to tamper with link.
+                        </h1>
+                    @else
+                        <h1 class="auth__title">Reset your password from here</h1>
+                        <form method='post' action="/user/forgotpassword/reset" autocomplete="off" role="presentation" class="form">
+                            <label style="display:block;font-weight:bold;">New Password (Min 6 chars & Alphanumeric)</label>
+                            <input type="hidden" name="id" value="{{id}}">
+                            <input type="password" name="password" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters" id='txtNewPassword' placeholder="Strong and Alphanumeric Password (Min 6 chars)" required>
+                            <label style="display:block;font-weight:bold;">Re-enter Password (Same as above)</label>
+                            <input type="password" name="password2" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters" id='txtConfirmPassword' placeholder="Repeat Password" required>
+                            <button type='submit' class="button button__accent" id="btnSubmit">Reset Your Password</button>
+                            <div id="divCheckPassword"></div>
+                        </form>
+                    @endif
+				</div>
+				@if(success!='')
+					<div class="myAlert-top alert alert-success">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong><i class="fas fa-check-circle"></i></strong> {{ success }}
+					</div>
+				@endif
+			</div>
+		</div>
+	</div>
+
+@endsection
+
+@section('scripts')
+<script>
+    function isPasswordMatch() {
+        var password = $("#txtNewPassword").val();
+        var confirmPassword = $("#txtConfirmPassword").val();
+
+        if (password != confirmPassword){
+            $("#divCheckPassword").html("Passwords do not match!");
+            $("#btnSubmit").attr("disabled", true);
+        }
+        else{
+            $("#divCheckPassword").html("Passwords match");
+            $("#btnSubmit").attr("disabled", false);
+        }
+    }
+
+    $(document).ready(function () {
+        $("#txtConfirmPassword").keyup(isPasswordMatch);
+    });
+</script>
+@endsection

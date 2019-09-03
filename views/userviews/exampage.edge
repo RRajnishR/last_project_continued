@@ -1,50 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Hepta+Slab|Lato&display=swap" rel="stylesheet">
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <style>
+        .btn-bd-download {
+            font-weight: 600;
+            color: #ffe484;
+            border-color: #ffe484;
+        }
+        .btn-bd-download:hover{
+            color: darkgoldenrod;
+            border-color: darkgoldenrod;
+        }
+        .sidebar{
+            font-family: 'Hepta Slab', serif;
+            font-size: 12px;
+        }
+        .sidebar_secname, .sidebar_time{
+            text-align: center;
+            color: #fff;
+        }
+        .exam {
+            height: 91.5vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            word-wrap:normal;
+            text-align: justify;
+        }
+        .seperator {
+            color: #ffe484;
+            border-color: #ffe484;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="jumbotron">
-  <div class="row">
-    <div class="col-md-3">
-      <table border="0" width="100%">
-        <tr>
-          <td>User</td>
-          <td>:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Exam</td>
-          <td>:</td>
-          <td></td>
-        </tr>
-      </table>
-    </div>
-    <div class="col-md-6">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Online Proficiency Test</a>
+        <div class="ml-auto">
+                <a class="btn btn-bd-download navbar-btn navbat-text"
+                href="" title="Stop and Exit the Exam"><i class="far fa-window-close"></i></a>
+        </div>
+    </nav>
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9 exam">
+                बेनीमाधव सिंह गौरीपुर गाँव के जमींदार और नम्बरदार थे। उनके पितामह किसी समय बड़े धन-धान्य संपन्न थे। गाँव का पक्का तालाब और मंदिर जिनकी अब मरम्मत भी मुश्किल थी, उन्हीं की कीर्ति-स्तंभ थे। कहते हैं, इस दरवाजे पर हाथी झूमता था, अब उसकी जगह एक बूढ़ी भैंस थी, जिसके शरीर में अस्थि-पंजर के सिवा और कुछ शेष न रहा था; पर दूध शायद बहुत देती थी; क्योंकि एक न एक आदमी हाँड़ी लिये उसके सिर पर सवार ही रहता था। बेनीमाधव सिंह अपनी आधी से अधिक संपत्ति वकीलों को भेंट कर चुके थे। उनकी वर्तमान आय एक हजार रुपये वार्षिक से अधिक न थी। ठाकुर साहब के दो बेटे थे। बड़े का नाम श्रीकंठ सिंह था। उसने बहुत दिनों के परिश्रम और उद्योग के बाद बी. ए. की डिग्री प्राप्त की थी। अब एक दफ्तर में नौकर था। छोटा लड़का लालबिहारी सिंह दोहरे बदन का, सजीला जवान था। भरा हुआ मुखड़ा, चौड़ी छाती। भैंस का दो सेर ताजा दूध वह उठ कर सबेरे पी जाता था। श्रीकंठ सिंह की दशा बिलकुल विपरीत थी। इन नेत्रप्रिय गुणों को उन्होंने बी. ए.-इन्हीं दो अक्षरों पर न्योछावर कर दिया था। इन दो अक्षरों ने उनके शरीर को निर्बल और चेहरे को कांतिहीन बना दिया था। इसी से वैद्यक ग्रंथों पर उनका विशेष प्रेम था। आयुर्वैदिक औषधियों पर उनका अधिक विश्वास था। शाम-सबेरे से उनके कमरे से प्रायः खरल की सुरीली कर्णमधुर ध्वनि सुनायी दिया करती थी। लाहौर और कलकत्ते के वैद्यों से बड़ी लिखा-पढ़ी रहती थी।
+            </div>
+            <div class="col-md-3 bg-dark sidebar">
+                <div class="sidebar_secname">
+                    <h3>Reading Section</h3>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_uservideo">
+                    <video width="100%"  id="video" autoplay muted>
+                        Error!
+                    </video>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_userdetails table-responsive">
+                    <table class="table table-sm table-borderless table-dark">
+                        <tr>
+                            <td>Name</td>
+                            <td>:</td>
+                            <td>Rajnish Kumar</td>
+                        </tr>
+                        <tr>
+                            <td>Language</td>
+                            <td>:</td>
+                            <td>Hindi</td>
+                        </tr>
+                        <tr>
+                            <td>Level</td>
+                            <td>:</td>
+                            <td>General</td>
+                        </tr>
+                        <tr>
+                            <td>Start Time</td>
+                            <td>:</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_time">
+                    <h5>Time Remaining: <span id="time"></span></h5>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3">
-        <table border="0" width="100%">
-            <tr>
-              <td>Start Time</td>
-              <td>:</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Time Left</td>
-              <td>:</td>
-              <td></td>
-            </tr>
-          </table>
-    </div>
-  </div>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function isMobileDevice() {
+            if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+                alert("It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.");
+                document.body.innerHTML = "<h1>It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.</h1>";
+            } 
+        }
+        isMobileDevice();
+        //checks if there is a webcam connected or not
+        function hasGetUserMedia() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        }
+
+        window.onload = function() {
+            if(hasGetUserMedia()){
+
+                var Minutes = 25 * 60,
+                display = document.querySelector('#time');
+                startTimer(Minutes, display);
+                //add constraints object
+                var constraints = { audio: true,
+                                    video: true};
+                navigator.getMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+                                    navigator.msGetUserMedia);
+                //call getUserMedia, then the magic
+                navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
+                    var video = document.querySelector('#video');
+                    video.srcObject = mediaStream;
+                    video.play();
+                }).catch(function(err){
+                    alert('Error! Media Devices were not found/allowed.');
+                    //console.log("yikes, and err!" + err.message);
+                });
+            } else {
+                alert('Your browser is allowing us to access webcam/mic.');
+            }
+        }
+        /* Timer Functionality */
+        function startTimer(duration, display) {
+            var start = Date.now(),
+                diff,
+                minutes,
+                seconds;
+            function timer() {
+                // get the number of seconds that have elapsed since 
+                // startTimer() was called
+                diff = duration - (((Date.now() - start) / 1000) | 0);
+
+                // does the same job as parseInt truncates the float
+                minutes = (diff / 60) | 0;
+                seconds = (diff % 60) | 0;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds; 
+
+                if (diff <= 0) {
+                    // add one second so that the count down starts at the full duration
+                    // example 05:00 not 04:59
+                    start = Date.now() + 1000;
+                }
+            };
+            // we don't want to wait a full second before the timer starts
+            timer();
+            setInterval(timer, 1000);
+        }
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Listening Section</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Hepta+Slab|Lato&display=swap" rel="stylesheet">
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <style>
+        .btn-bd-download {
+            font-weight: 600;
+            color: #ffe484;
+            border-color: #ffe484;
+        }
+        .btn-bd-download:hover{
+            color: darkgoldenrod;
+            border-color: darkgoldenrod;
+        }
+        .sidebar{
+            font-family: 'Hepta Slab', serif;
+            font-size: 12px;
+        }
+        .sidebar_secname, .sidebar_time{
+            text-align: center;
+            color: #fff;
+        }
+        .exam {
+            height: 91.5vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            word-wrap:normal;
+            text-align: justify-all;
+        }
+        .seperator {
+            color: #ffe484;
+            border-color: #ffe484;
+        }
+        .sidebar_uservideo video{
+            width: 100%;
+        }
+        .sidebar_submit{
+            text-align: center;
+        }
+        video {
+            height: 80%;
+            width: 80%;
+            margin: 0 auto;
+        }
+        audio{
+            width: 80%;
+            margin: 0 auto;
+        }
+        .card{
+            margin: 2%;
+            -webkit-box-shadow: 3px 3px 8px -1px rgba(77,49,77,1);
+            -moz-box-shadow: 3px 3px 8px -1px rgba(77,49,77,1);
+            box-shadow: 3px 3px 8px -1px rgba(77,49,77,1);
+        }
+        .form-group{
+            margin-left: 3%;
+            margin-right: 3%;
+        }
+        .hidethis{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Online Proficiency Test</a>
+        <div class="ml-auto">
+                <a class="btn btn-bd-download navbar-btn navbat-text"
+                href="/user/exam/stop/{{examid}}" title="Stop and Exit the Exam"><i class="far fa-window-close"></i></a>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9 exam">
+                @each(ques in docs)
+                    <div class="card">
+                      <h4 class="card-title"><i class="far fa-question-circle"></i> {{ques.title}}</h4>
+                      @if(ques.document_type == "video")
+                          <video controls controlsList="nodownload">
+                              <source src="{{ques.path_of_file}}" type="{{ques.mimetype}}">
+                          </video>
+                      @else
+                          <audio controls controlsList="nodownload">
+                              <source src="{{ques.path_of_file}}" type="{{ques.mimetype}}">
+                              Your browser does not support the audio element.
+                          </audio>
+                      @endif
+                      <br/><br/>
+                    <form id="{{ques._id}}" action="/user/exam/listening/save/{{examid}}/{{ques._id}}" method="POST">
+                        @each(question in ques.questions)
+                            <div class="form-group">
+                                <label for="{{question._id}}"><b>{{ ($loop.index + 1) }}.</b> {{question.question}} </label> <br/>
+                                @if(question.qtype == "optional")
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" 
+                                    name="{{question._id}}" value="{{question.option1}}">{{question.option1}}
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" 
+                                    name="{{question._id}}" value="{{question.option2}}">{{question.option2}}
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" 
+                                    name="{{question._id}}" value="{{question.option3}}">{{question.option3}}
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" 
+                                    name="{{question._id}}" value="{{question.option4}}">{{question.option4}}
+                                    </label>
+                                </div>
+                                <div class="form-check-inline hidethis">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" 
+                                    name="{{question._id}}" value="" checked>blank
+                                    </label>
+                                </div> <br/>
+                                @elseif(question.qtype == "singleliner")
+                                <input type="text" class="form-control" name="{{question._id}}">
+                                @else
+                                <textarea class="form-control txtarea" id="{{question._id}}" name="{{question._id}}"></textarea>
+                                @endif
+                            </div>
+                        @endeach
+                    </form>
+                    </div>
+                @endeach
+            </div>
+            <div class="col-md-3 bg-dark sidebar">
+                <div class="sidebar_secname">
+                    <h3>Listening Section</h3>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_uservideo">
+                    <video width="100%"  id="video" autoplay muted>
+                        Error!
+                    </video>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_userdetails table-responsive">
+                    <table class="table table-sm table-borderless table-dark">
+                        <tr>
+                            <td>Examinee</td>
+                            <td>:</td>
+                            <td>{{fullname}}</td>
+                        </tr>
+                        <tr>
+                            <td>Language</td>
+                            <td>:</td>
+                            <td>{{language}}</td>
+                        </tr>
+                        <tr>
+                            <td>Level</td>
+                            <td>:</td>
+                            <td>{{lang_level}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_time">
+                    <h5>Time Remaining: <span id="time"></span></h5>
+                </div>
+                <hr class="seperator">
+                <div class="sidebar_submit">
+                    <button class=" btn btn-success btn-lg" id="submitbutton">
+                        <i class="fas fa-save"></i> Submit <i class="fas fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/kanni.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/bengali.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/gujarati.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/hindi.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/kannada.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/malayalam.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/oriya.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/punjabi.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/tamil.js"></script>
+    <script type="text/javascript" src="/ckeditor/plugins/kanni/lang/telugu.js"></script>
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.txtarea').each(function(e){
+                CKEDITOR.replace( this.id, {
+                    toolbarGroups: [{
+                    "name": "basicstyles",
+                    "groups": ["basicstyles"]
+                    },
+                    {
+                    "name": "links",
+                    "groups": ["links"]
+                    },
+                    {
+                    "name": "paragraph",
+                    "groups": ["list", "blocks"]
+                    },
+                    {
+                    "name": "document",
+                    "groups": ["mode"]
+                    },
+                    {
+                    "name": "insert",
+                    "groups": ["insert"]
+                    },
+                    {
+                    "name": "styles",
+                    "groups": ["styles"]
+                    },
+                    {
+                    "name": "about",
+                    "groups": ["about"]
+                    }
+                ],
+                // Remove the redundant buttons from toolbar groups defined above.
+                removeButtons: 'Strike,Subscript,Superscript,Source,Link,Anchor,Styles,Specialchar',
+                extraPlugins: 'kanni'
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).keydown(function (event) {
+            if(event.keyCode == 123 || event.keyCode == 16 || event.keyCode == 17 || event.keyCode == 18){
+                alert('Ctrl, Alt and Other Keys are not allowed');
+                return false;
+            }
+        });
+        function isMobileDevice() {
+            if((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)){
+                alert("It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.");
+                document.body.innerHTML = "<h1>It seems that you're trying to access this site via a mobile device. We advice you to start the exam with a laptop/pc with a working webcam and Mic.</h1>";
+            } 
+        }
+        isMobileDevice();
+        //checks if there is a webcam connected or not
+        function hasGetUserMedia() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        }
+
+        window.onload = function() {
+            if(hasGetUserMedia()){
+                //getting remaining seconds
+                var Minutes = ({{examtime}} - Date.now())/1000;
+                display = document.querySelector('#time');
+                startTimer(Minutes, display);
+                //add constraints object
+                var constraints = { audio: true,
+                                    video: true};
+                navigator.getMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+                                    navigator.msGetUserMedia);
+                //call getUserMedia, then the magic
+                navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
+                    var video = document.querySelector('#video');
+                    video.srcObject = mediaStream;
+                    video.play();
+                }).catch(function(err){
+                    alert('Error! Media Devices were not found/allowed.');
+                    //console.log("yikes, and err!" + err.message);
+                });
+            } else {
+                alert('Your browser is not allowing us to access webcam/mic.');
+            }
+        }
+        /* Timer Functionality */
+        function startTimer(duration, display) {
+            var start = Date.now(),
+                diff,
+                minutes,
+                seconds;
+            function timer() {
+                // get the number of seconds that have elapsed since 
+                // startTimer() was called
+                diff = duration - (((Date.now() - start) / 1000) | 0);
+
+                // does the same job as parseInt truncates the float
+                minutes = (diff / 60) | 0;
+                seconds = (diff % 60) | 0;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds; 
+
+                if (diff <= 0) {
+                    // add one second so that the count down starts at the full duration
+                    //--->start = Date.now() + 1000;
+                    // ---> submit the form at alert("times up");
+                    alert("Sorry, Times up. Please wait while we submit your answers and take you to the next section");
+                    clearInterval(pagetimer);
+                    $("#submitbutton").click();
+                }
+            };
+            // we don't want to wait a full second before the timer starts
+            timer();
+            var pagetimer = setInterval(timer, 1000);
+
+        }
+        $(document).ready(function() {
+            $('#submitbutton').click(function(){
+                //Following code taked the text from CKEDITOR and updates into textarea.
+                for (instance in CKEDITOR.instances) 
+                {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+                //sending ajax forms.
+                @each(ques in docs)
+                $.ajax({
+                    type: 'POST',
+                    async:false,
+                    url: $("#{{ques.id}}").attr("action"),
+                    data: $("#{{ques.id}}").serialize(), 
+                    success: function(response) { 
+                        //Hopefully everything gets updated.
+                        console.log(response); 
+                    },
+                    error: function(d) {  console.log("error"); }
+                });
+                //console.log($("#{{ques.id}}").serialize());
+                @endeach   
+                window.location.href="/user/exam/write/{{examid}}";
+            });
+        });
+    </script>
+</body>
+
+</html>

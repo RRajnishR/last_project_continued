@@ -1,15 +1,28 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 var router = express.Router();
+const path = require('path');
 const User = require('../models/users.model'); 
 const languagesDB = require('../models/language.model');
 const readingSectionDB = require('../models/readingSection.model');
 const listeningSectionDB = require('../models/listeningSection.model');
 const writingSectionDB = require('../models/writingSection.model');
 const speakingSectionDB = require('../models/speakingSection.model');
+const userExamDB = require('../models/userResponse.model');
 const emailTransporter = require('../middlewares/sendmail.middleware');
 const isLogin = require('../middlewares/userIsLogin.middleware');
 const isAuthenticated = require('../middlewares/userIsAuthenticated.middleware');
+
+//Generate random name.
+function makeid(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 router.get('/login', isLogin, (req, res) => {
     res.render("userviews/loginUser",{
@@ -72,6 +85,7 @@ router.post('/forgotpassword', (req, res) =>{
               
               emailTransporter.sendMail(mailOptions, function(error, info){
                 if (error) {
+                    console.log(error);
                     req.flash('errorMessage', "Sorry, Can not send email right now, please come back later.");
                     return res.redirect('/user/forgotpassword');
                 } else {
@@ -92,9 +106,85 @@ router.post('/forgotpassword', (req, res) =>{
 
 router.get('/forgotpassword/:id/:token/:time', (req, res) => {
     const {id, token, time} = req.params;
-    res.send(id+" "+token+" "+time);
+    User.findById(id, (err, user) => {
+        if(err){
+            //This returned error
+            res.render("userviews/changepass",{
+                success: req.flash('successMessage'),
+                error : req.flash('errorMessage'),
+                flag : 1,
+                title: "Reset your password",
+                description : "This page will help the user in resetting their password",
+                keywords: "Reset Password, password retreival page"
+            }); 
+        }
+        if(user){
+            //Token Matched
+            if(token == user.secret_token){
+                //Time expired
+                if(Date.now() > time){
+                    res.render("userviews/changepass",{
+                        success: req.flash('successMessage'),
+                        error : req.flash('errorMessage'),
+                        flag : 2,
+                        title: "Reset your password",
+                        description : "This page will help the user in resetting their password",
+                        keywords: "Reset Password, password retreival page"
+                    });
+                }else{
+                    //still in time
+                    res.render("userviews/changepass",{
+                        success: req.flash('successMessage'),
+                        error : req.flash('errorMessage'),
+                        id,
+                        flag : 4,
+                        title: "Reset your password",
+                        description : "This page will help the user in resetting their password",
+                        keywords: "Reset Password, password retreival page"
+                    });
+                }
+            } else {
+                //Token Unmatched
+                res.render("userviews/changepass",{
+                    success: req.flash('successMessage'),
+                    error : req.flash('errorMessage'),
+                    flag : 3,
+                    title: "Reset your password",
+                    description : "This page will help the user in resetting their password",
+                    keywords: "Reset Password, password retreival page"
+                });
+            }
+        }
+    });
 });
 
+function generateSecretKey() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 8; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+router.post('/forgotpassword/reset', (req, res) => {
+    const { id, password } = req.body;
+    bcrypt.hash(password, 10, function (error, encrypted) {
+        if(error){
+            req.flash('errorMessage', "Something went wrong while creating new password");
+            res.redirect('/user/login');
+        }
+        User.findOneAndUpdate({_id: id}, {password : encrypted, secret_token : generateSecretKey()}, (err, user) => {
+            if(err){
+                req.flash('errorMessage', "Something went wrong while updating your new password");
+                res.redirect('/user/login');
+            }
+            req.flash('successMessage', "Awesome, you've created your new password. Login Now.");
+            res.redirect('/user/login');
+        });
+    });
+});
 
 router.get('/register', isLogin, (req, res) => {
     res.render("userviews/registerUser",{
@@ -237,14 +327,46 @@ router.get('/userpage', isAuthenticated, (req, res) => {
         email : req.session.email,
         title: "Users Profile",
         description : "This page will update the user details",
-        keywords: "profile, language test portal"
+        keywords: "profile, language test portal",
+        success: req.flash('successMessage'),
+        error : req.flash('errorMessage')
     });
 });
 
 router.post('/userpage', (req, res) => {
-    //have to write update code from here
-    req.flash('errorMessage', 'Sorry, updation failed. Try again after sometime');
-    res.redirect('/user/userpage');
+    const { profile_image } = req.files;
+    var allowed_mimetype = ["image/png", "image/jpeg"];
+    if(!allowed_mimetype.includes(profile_image.mimetype)){
+        req.flash('errorMessage', 'Only *.jpg & *.png images are allowed.');
+        return res.redirect('/user/userpage');
+    }
+
+    if(profile_image.size > 2097152){
+        req.flash('errorMessage', 'Size of image can not be larger than 2 MB');
+        return res.redirect('/user/userpage');
+    }
+ 
+    const pathname = makeid(3)+"_"+profile_image.name;
+    let uploadPath = path.resolve(__dirname, '..', 'public/all_media/photos', pathname);
+    profile_image.mv(uploadPath, (err) => {
+        if(err){
+            req.flash('errorMessage', 'Something went wrong while uploading the media');
+            return res.redirect('/user/userpage');
+        } 
+
+        User.findById(req.session.userid, (error, thisuser) => {
+            if(err){
+                req.flash('errorMessage', 'Something went wrong while updating the database');
+                return res.redirect('/user/userpage');
+            }
+            thisuser.profile_image = "/all_media/photos/"+pathname;
+            thisuser.save(err => {
+                req.session.dp = "/all_media/photos/"+pathname;
+                req.flash('successMessage', 'New Profile picture uploaded successfully!');
+                res.redirect('/user/userpage');
+            });
+        });
+    });
 });
 
 router.get('/starttest', isAuthenticated, async(req, res) => {
@@ -254,6 +376,8 @@ router.get('/starttest', isAuthenticated, async(req, res) => {
         fullname : req.session.fullname,
         dp : req.session.dp,
         email : req.session.email,
+        success: req.flash('successMessage'),
+        error : req.flash('errorMessage'),
         title: "Users Test Inititation",
         description : "This page will help the user in starting his test",
         keywords: "Start language test",
@@ -276,7 +400,7 @@ router.get('/starttest/:langname', isAuthenticated, (req, res) => {
     });
 });
 
-router.get('/starttest/:langname/level/:langlevel',  async(req, res) => {
+router.get('/starttest/:langname/level/:langlevel', isAuthenticated,  async(req, res) => {
     //Randomly select 2 paragraphs from reading section
     //Use https://stackoverflow.com/a/24808585/2823275 to add "match" keywords for language level
 
@@ -304,7 +428,7 @@ router.get('/starttest/:langname/level/:langlevel',  async(req, res) => {
         } 
         return data[0];
     });
-    
+
     let reading_section_ques_2 = await readingSectionDB.aggregate([
         {$match : 
             {
@@ -410,6 +534,41 @@ router.get('/starttest/:langname/level/:langlevel',  async(req, res) => {
         return data[0];
     });
 
+
+    const newExam = new userExamDB({
+        user_id : req.session.userid,
+        language : langname,
+        lang_level : (level == "na" ? "GEN" : level),
+        reading_section : [
+            { reading_para_id : reading_section_ques_1[0]._id }, 
+            { reading_para_id : reading_section_ques_2[0]._id },
+        ],
+        writing_section : [
+            {writing_topic_id : writing_ques_1[0]._id},
+            {writing_topic_id : writing_ques_2[0]._id} 
+        ],
+        listening_section : [
+            {listening_media_id : listening_quest_1[0]._id},
+            {listening_media_id : listening_quest_2[0]._id},
+            {listening_media_id : listening_quest_3[0]._id},
+        ],
+        speaking_section : {
+            speaking_ques_id : speaking_ques_1[0]._id
+        }
+    })
+
+    userExamDB.create(newExam, (error, exam) => {
+        if(error){
+            req.flash('errorMessage', 'Sorry, something went wrong while creating a new exam for you. Please come back later');
+            return res.redirect('/user/starttest/'+langname);
+        } 
+        res.redirect('/user/disclaimer/'+exam._id);
+    });   
+    
+});
+
+router.get('/disclaimer/:examid', (req, res) => {
+    const examid = req.params.examid;
     res.render("userviews/showdisclaimer",{
         title: "Exam Disclaimer Page",
         description : "This page will give disclaimer and information about the exam",
@@ -417,16 +576,381 @@ router.get('/starttest/:langname/level/:langlevel',  async(req, res) => {
         userid : req.session.userid,
         fullname : req.session.fullname,
         dp : req.session.dp,
-        email : req.session.email
-    });    
+        email : req.session.email,
+        examid : examid
+    });
+});
+
+router.get('/exam/listen/:examid', (req, res) => {
+    const examid = req.params.examid;
+    res.render("userviews/listendisclaimer", {
+        title: "Listening Section Start",
+        description : "Exam has started",
+        keywords: "Listening Section, Exam, Language, Interpretation",
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        examid : examid
+    });
+});
+
+//Listening Exam Start from here 
+router.get('/exam/listening/start/:examid/t/:starttime', isAuthenticated, async(req, res) => {
+    const examid = req.params.examid;
+    const examtime = req.params.starttime;
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while creating a new exam for you. Please come back later');
+            return res.redirect('/user/starttest/');
+        }
+        //console.log(exam);
+        let listeningids = [exam.listening_section[0].listening_media_id, exam.listening_section[1].listening_media_id, exam.listening_section[2].listening_media_id];
+        
+        listeningSectionDB.find({
+            '_id': { $in: listeningids}
+        }, function(err, docs){
+             //console.log(docs);
+             res.render("userviews/listenexampage", {
+                title: "Listening Section Start",
+                description : "Exam has started",
+                keywords: "Listening Section, Exam, Language, Interpretation",
+                userid : req.session.userid,
+                fullname : req.session.fullname,
+                dp : req.session.dp,
+                email : req.session.email,
+                language : exam.language,
+                lang_level : exam.lang_level,
+                examid:exam._id,
+                examtime, 
+                docs
+            });
+        });
+
+        
+    })
+});
+
+router.post("/exam/listening/save/:examid/:quesid", (req, res) => {
+    const examid = req.params.examid;
+    const quesid = req.params.quesid;
+    req.body = JSON.parse(JSON.stringify(req.body));
+    //Using the for loop to take the name & value of form element seperately and pushing them in respective userresponse 
+    const userresponse = [];
+    for (var key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+          userresponse.push({
+            listen_ques_id : key,
+            response : req.body[key]
+          })
+        }
+    }
+    
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            return "failed";
+        }
+        objIndex = exam.listening_section.findIndex(( obj => obj.listening_media_id == quesid));
+        //console.log(quesid, objIndex);
+        exam.listening_section[objIndex].user_response = [...userresponse];
+        exam.save(err => {
+            if(err){
+                res.json({"status": "failed", error: err})
+            } else {
+                res.json({"status": "success"})
+            }
+        })
+    });
     
 });
 
-router.get('/exam', (req, res) => {
-    res.render("userviews/exampage", {
-        title: "Exam Page",
-        description : "Exam has started",
-        keywords: "Exam, Language, Interpretation"
+//Writing Section Starts
+router.get("/exam/write/:examid", (req, res) => {
+    const examid = req.params.examid;
+    res.render("userviews/writingdisclaimer", {
+        title: "Writing Section Start",
+        description : "Exam part 2",
+        keywords: "Writing Section, Exam, Language, Interpretation",
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        examid : examid
+    });
+});
+
+router.get('/exam/writing/start/:examid/t/:starttime', isAuthenticated, async(req, res) => {
+    const examid = req.params.examid;
+    const examtime = req.params.starttime;
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while creating a new exam for you. Please come back later');
+            return res.redirect('/user/starttest/');
+        }
+        let writingids = [exam.writing_section[0].writing_topic_id, exam.writing_section[1].writing_topic_id];
+        
+        writingSectionDB.find({
+            '_id': { $in: writingids}
+        }, function(err, docs){
+             res.render("userviews/writingexampage", {
+                title: "Writing Section Start",
+                description : "Second Part has started",
+                keywords: "Writing Section, Exam, Language, Interpretation",
+                userid : req.session.userid,
+                fullname : req.session.fullname,
+                dp : req.session.dp,
+                email : req.session.email,
+                language : exam.language,
+                lang_level : exam.lang_level,
+                examid:exam._id,
+                examtime, 
+                docs
+            });
+        }); 
+    })
+});
+
+router.post("/exam/writing/save/:examid/:quesid", (req, res) => {
+    const examid = req.params.examid;
+    const quesid = req.params.quesid;
+    const response = req.body.response;
+    
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            return "failed";
+        }
+        objIndex = exam.writing_section.findIndex(( obj => obj.writing_topic_id == quesid));
+        //console.log(quesid, objIndex);
+        exam.writing_section[objIndex].user_answer = response;
+        exam.save(err => {
+            if(err){
+                res.json({"status": "failed", error: err})
+            } else {
+                res.json({"status": "success"})
+            }
+        })
+    });
+    
+});
+
+//Reading Section Starts
+router.get("/exam/read/:examid", (req, res) => {
+    const examid = req.params.examid;
+    res.render("userviews/readdisclaimer", {
+        title: "Reading Section Start",
+        description : "Exam part 3",
+        keywords: "Reading Section, Exam, Language, Interpretation",
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        examid : examid
+    });
+});
+
+router.get('/exam/reading/start/:examid/t/:starttime', isAuthenticated, async(req, res) => {
+    const examid = req.params.examid;
+    const examtime = req.params.starttime;
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while creating a new exam for you. Please come back later');
+            return res.redirect('/user/starttest/');
+        }
+        //console.log(exam);
+        let readingids = [exam.reading_section[0].reading_para_id, exam.reading_section[1].reading_para_id];
+        
+        readingSectionDB.find({
+            '_id': { $in: readingids}
+        }, function(err, docs){
+             //console.log(docs);
+             res.render("userviews/readexampage", {
+                title: "Listening Section Start",
+                description : "Exam has started",
+                keywords: "Listening Section, Exam, Language, Interpretation",
+                userid : req.session.userid,
+                fullname : req.session.fullname,
+                dp : req.session.dp,
+                email : req.session.email,
+                language : exam.language,
+                lang_level : exam.lang_level,
+                examid:exam._id,
+                examtime, 
+                docs
+            });
+        });
+
+        
+    })
+});
+
+router.post("/exam/reading/save/:examid/:quesid", (req, res) => {
+    const examid = req.params.examid;
+    const quesid = req.params.quesid;
+    req.body = JSON.parse(JSON.stringify(req.body));
+    //Using the for loop to take the name & value of form element seperately and pushing them in respective userresponse 
+    const userresponse = [];
+    for (var key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+          userresponse.push({
+            listen_ques_id : key,
+            response : req.body[key]
+          })
+        }
+    }
+    
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            return "failed";
+        }
+        objIndex = exam.reading_section.findIndex(( obj => obj.reading_para_id == quesid));
+        //console.log(quesid, objIndex);
+        exam.reading_section[objIndex].user_response = [...userresponse];
+        exam.save(err => {
+            if(err){
+                res.json({"status": "failed", error: err})
+            } else {
+                res.json({"status": "success"})
+            }
+        })
+    });
+    
+});
+
+
+router.get("/exam/speak/:examid", (req, res) => {
+    const examid = req.params.examid;
+    res.render("userviews/speakdisclaimer", {
+        title: "Speaking Section Start",
+        description : "Exam part 4",
+        keywords: "Speaking Section, Exam, Language, Interpretation",
+        userid : req.session.userid,
+        fullname : req.session.fullname,
+        dp : req.session.dp,
+        email : req.session.email,
+        examid : examid
+    });
+});
+
+router.get('/exam/speaking/start/:examid/t/:starttime', isAuthenticated, async(req, res) => {
+    const examid = req.params.examid;
+    const examtime = req.params.starttime;
+    userExamDB.findById(examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while creating a new exam for you. Please come back later');
+            return res.redirect('/user/starttest/');
+        }
+        //console.log(exam);
+        let speakingid = exam.speaking_section.speaking_ques_id;
+        
+        speakingSectionDB.findById(speakingid, function(err, doc){
+             //console.log(docs);
+             res.render("userviews/speakexampage", {
+                title: "Listening Section Start",
+                description : "Exam has started",
+                keywords: "Listening Section, Exam, Language, Interpretation",
+                userid : req.session.userid,
+                fullname : req.session.fullname,
+                dp : req.session.dp,
+                email : req.session.email,
+                language : exam.language,
+                lang_level : exam.lang_level,
+                examid:exam._id,
+                examtime, 
+                doc
+            });
+        });
+
+        
+    })
+});
+
+
+router.post("/exam/speaking/upload/:examid/:qtype", (req, res) => {
+    const { audiovideo } = req.files;
+    const examid = req.params.examid;
+    const qtype = req.params.qtype;
+    //console.log(audiovideo);
+    const filename = makeid(8)+".webm";
+    let uploadPath = path.resolve(__dirname, '..', 'public/all_media/speakingsectionexam', filename);
+
+    audiovideo.mv(uploadPath, (error) => {
+        if(error){
+            //console.log(error);
+            return res.json({"report": "failed", "err": "failed while uploading"});
+        }
+        userExamDB.findById(examid, (err, exam) => {
+            if(err){
+                return res.json({"report": "failed", "err": "failed while searching in db"});
+            }
+            //**important: add code to check if there is any other value present, if yes unlink the file first.
+            if(qtype == 1){
+                exam.speaking_section.directed_interview_res = '/all_media/speakingsectionexam/'+filename;
+            } else if(qtype == 2) {
+                exam.speaking_section.interaction_ques_res = '/all_media/speakingsectionexam/'+filename;
+            } else if(qtype == 3){
+                exam.speaking_section.pov_res = '/all_media/speakingsectionexam/'+filename;
+            }
+            exam.save(err2 => {
+                if(err2){
+                    return res.json({"report": "failed", "err": "failed while saving in db"});
+                }
+                res.json({"report": "success"});
+            });
+        });
+    });
+});
+
+router.get("/exam/stop/:examid", isAuthenticated, (req, res) => {
+    userExamDB.findById(req.params.examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while exiting from exam for you. Although you can logout now.');
+            return res.redirect('/user/starttest/');
+        }
+        exam.exam_status = "Cancelled";
+        exam.save(error => {
+            if(error){
+                req.flash('errorMessage', 'Sorry, something went wrong while cancelling exam for you. Although you can logout now.');
+                return res.redirect('/user/starttest/');
+            } 
+            req.flash('successMessage', 'We cancelled this exam for you. We recommend you start exam only when you are certain to complete it.');
+            return res.redirect('/user/starttest/');
+        });
+    });
+});
+
+router.get("/exam/finish/:examid", isAuthenticated, (req, res) => {
+    userExamDB.findById(req.params.examid, (err, exam) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while finding and completing exam for you. Although you can logout now.');
+            return res.redirect('/user/starttest/');
+        }
+        exam.exam_status = "Completed";
+        exam.exam_end_time = new Date();
+        exam.save(error => {
+            if(error){
+                req.flash('errorMessage', 'Sorry, something went wrong while completing exam for you. Although you can logout now.');
+                return res.redirect('/user/starttest/');
+            } 
+            req.flash('successMessage', 'Awesome, you have completed the text. Results will be notifies to you soon.');
+            return res.redirect('/user/results');
+        });
+    });
+});
+
+router.get("/results", isAuthenticated, (req, res) => {
+    userExamDB.find({user_id: req.session.userid}, (err, docs) => {
+        if(err){
+            req.flash('errorMessage', 'Sorry, something went wrong while fetching results from DataBase');
+            return res.redirect('/user/starttest/');
+        }
+        res.render("userviews/results",{
+            success: req.flash('successMessage'),
+            error : req.flash('errorMessage'),
+            title: "Language Exam Results",
+            description : "This page will list the results of exams",
+            keywords: "Exam, result, language exams",
+            docs
+        });
     });
 });
 

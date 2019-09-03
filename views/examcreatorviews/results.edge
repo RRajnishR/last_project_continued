@@ -1,0 +1,78 @@
+@layout('layouts.examiner_dashboard.edge')
+
+@section('style')
+<!-- Page level plugin CSS-->
+<link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+@endsection
+
+@section('body')
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/exam/dashboard/">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Completed Exam Papers</li>
+      </ol>
+
+      <!-- DataTables Example -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fas fa-table"></i>
+          List of recently completed exams for you to check. 
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Level</th>
+                  <th>Exam Date</th>
+                  <th>Status</th>
+                  <th>Marks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if(exams.length > 0)
+                    @each(exam in exams)
+                    <tr>
+                        <td>{{$loop.index + 1}}</td>
+                        <td>{{exam.lang_level}}</td>
+                        <td>{{exam.exam_start_time.toDateString()}}</td>
+                        <td><i class="{{exam.check_status ? 'fas fa-check-circle' : 'fas fa-clock'}}"></i></td>
+                        <td>{{exam.marks_obtained}}</td>
+                        <td>
+                            <a href="/exam/checkpaper/{{exam._id}}" class="btn btn-xs btn-primary"><i class="fab fa-readme"></i> Check </a>
+                        </td>
+                    </tr>
+                    @endeach
+                @else
+                  <tr>
+                      <td colspan="6" style="text-align:center;">No Data Found! List will populate itself, when users will take exam of your language expertise.</td>
+                  </tr>
+                @endif
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">
+          <p class="small"><b>*Steps to Check an Examination</b> <br/> 
+            <b>Step 1:</b> Click on "<i class="fab fa-readme"></i>" button, to open up the exam of any user. <br/>
+            <b>Step 2:</b> After carefully going through all the answers. Award marks to the person (/100). then save the exam paper.<br/>
+            <b>P.S: <i class="fas fa-clock"></i> = Exam is not Checked. <i class="fas fa-check-circle"></i> = Exam is checked.</b>
+          </p>
+        </div>
+      </div>
+@endsection
+
+@section('scripts')
+<!-- Page level plugin JavaScript-->
+<script src="/vendor/datatables/jquery.dataTables.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
+@endsection

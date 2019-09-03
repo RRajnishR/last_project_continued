@@ -10,6 +10,7 @@ const readingSectionDB = require('../models/readingSection.model');
 const listeningSectionDB = require('../models/listeningSection.model');
 const writingSectionDB = require('../models/writingSection.model');
 const speakingSectionDB = require('../models/speakingSection.model');
+const examDB = require('../models/userResponse.model');
 const checkAuthentication = require('../middlewares/examcreator_islogin.middleware');
 const authoriseExaminer = require('../middlewares/ec_isAuthenticated.middleware');
 const emailTransporter = require('../middlewares/sendmail.middleware');
@@ -168,12 +169,20 @@ router.get('/verify/:id/:secret', (req, res) => {
 /*
     Following Route Opens Dashboard
 */
-router.get('/dashboard', authoriseExaminer, (req, res) => {
+router.get('/dashboard', authoriseExaminer, async(req, res) => {
+    const readsec = await readingSectionDB.find({exam_creator : req.session.examinerid});
+    const listensec = await listeningSectionDB.find({exam_creator : req.session.examinerid});
+    const writesec = await writingSectionDB.find({exam_creator : req.session.examinerid});
+    const speaksec = await speakingSectionDB.find({exam_creator : req.session.examinerid});
     res.render("examcreatorviews/dashboard", {
         title : "Exam Creators DashBoard",
         keywords: "exam, create, Questions",
         description : "Protected Dashboard for Exam Creators",
         language : req.session.expert_in_lang,
+        readsec,
+        listensec,
+        writesec,
+        speaksec
     });
 });
 
@@ -781,6 +790,59 @@ router.get('/speakingSection/delQues/:id', authoriseExaminer, (req, res) => {
             req.flash('successMessage', 'Question set deleted successfully');
         }
         res.redirect('/exam/speakingSection');
+    });
+});
+
+router.get("/results", authoriseExaminer, async(req, res) => {
+    const exams = await examDB.find({language : req.session.expert_in_lang, exam_status: "Completed"});
+    res.render("examcreatorviews/results", {
+        title : "Exam Completed By Users",
+        keywords: "exam, Assess, Check Exam",
+        description : "Examiner can check unchecked exampapers from here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
+        examinerid : req.session.examinerid,
+        exams
+    });
+});
+
+router.get("/checkpaper/:examid", authoriseExaminer, async(req, res) => {
+    const examid = req.params.examid;
+    const exam = await examDB.findById(examid);
+
+    let readingids = [exam.reading_section[0].readin_para_id, exam.reading_section[1].readin_para_id];
+    let writingids = [exam.writing_section[0].writing_topic_id, exam.writing_section[1].writing_topic_id];
+    let listeningids = [exam.listening_section[0].listening_media_id, exam.listening_section[1].listening_media_id, exam.listening_section[2].listening_media_id];
+    let speakingid = exam.speaking_section.speaking_ques_id;
+
+    const listendocs = await listeningSectionDB.find({'_id': { $in: listeningids}});
+    const readingdocs = await readingSectionDB.find({'_id': { $in: readingids}});
+    const writingdocs = await writingSectionDB.find({'_id': { $in: writingids}});
+    const speakingdoc = await speakingSectionDB.findById(speakingid);
+
+    // for(let i=0; i<listendocs.length; i++){
+    //     let indexinexamtable = exam.listening_section.findIndex((obj => obj.listening_media_id == listendocs[i]._id));
+    //     let questions = listendocs.questions;
+    //     for(let j=0; j<questions.length; j++){
+    //         let indexinarray = questions.findIndex((obj => obj._id == questions[j]._id));
+    //         questions[i].response = exam.listening_section[indexinexamtable].user_response[indexinarray]
+    //     }
+    // }
+
+    res.render("examcreatorviews/checkpaper", {
+        title : "Exam Completed By Users",
+        keywords: "exam, Assess, Check Exam",
+        description : "Examiner can check unchecked exampapers from here",
+        successMessage : req.flash('successMessage'),
+        errorMessage : req.flash('errorMessage'),
+        language : req.session.expert_in_lang,
+        examinerid : req.session.examinerid,
+        exam,
+        listendocs,
+        readingdocs,
+        writingdocs,
+        speakingdoc
     });
 });
 
