@@ -949,7 +949,11 @@ router.get("/results", isAuthenticated, (req, res) => {
             title: "Language Exam Results",
             description : "This page will list the results of exams",
             keywords: "Exam, result, language exams",
-            docs
+            docs,
+            userid : req.session.userid,
+            fullname : req.session.fullname,
+            dp : req.session.dp,
+            email : req.session.email
         });
     });
 });
